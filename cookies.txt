@@ -1,0 +1,8 @@
+        
+        //    new CookieOptions
+        //    {
+        //        HttpOnly = true,
+        //        Secure = true,
+        //        SameSite = SameSiteMode.Lax
+        //    }
+        //);

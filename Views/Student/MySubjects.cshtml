@@ -1,0 +1,10 @@
+﻿@model List<PopeShenoudaSeminary.Models.Subject>
+
+<h2>المواد الدراسية</h2>
+
+<ul>
+    @foreach (var subject in Model)
+    {
+        <li>@subject.Name</li>
+    }
+</ul>

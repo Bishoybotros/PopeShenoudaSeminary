@@ -1,0 +1,390 @@
+{
+    "الأولي": {
+        "العلوم الفلسفية والتربوية": [
+            {
+                "name": "العلم والكتاب",
+                "image": "subject-1.jpg",
+                "download": "files/elm-wel-ketab.pdf",
+                "downloads": 19405
+            },
+            {
+                "name": "مناهج البحث",
+                "image": "subject-2.jpg",
+                "download": "files/manahig-albahth.pdf",
+                "downloads": 7731
+            }
+        ],
+        "العلوم اللاهوتية": [
+            {
+                "name": "ل. روحي",
+                "image": "subject-3.jpg",
+                "download": "files/roh7y.pdf",
+                "downloads": 1200
+            },
+            {
+                "name": "ل. طقسي",
+                "image": "subject-4.jpg",
+                "download": "files/taqosy.pdf",
+                "downloads": 980
+            },
+            {
+                "name": "ل. عقيدي",
+                "image": "subject-5.jpg",
+                "download": "files/aqeedy.pdf",
+                "downloads": 1500
+            },
+            {
+                "name": "ل. مقارن",
+                "image": "subject-6.jpg",
+                "download": "files/mokaren.pdf",
+                "downloads": 860
+            },
+            {
+                "name": "ل. نظري",
+                "image": "subject-7.jpg",
+                "download": "files/nazary.pdf",
+                "downloads": 430
+            }
+        ],
+        "العلوم والفنون الكنسية": [
+            {
+                "name": "ابائيات",
+                "image": "subject-8.jpg",
+                "download": "files/aba2yat.pdf",
+                "downloads": 2100
+            },
+            {
+                "name": "الحان",
+                "image": "subject-22.jpeg",
+                "download": "files/al7an.pdf",
+                "downloads": 3300
+            },
+            {
+                "name": "تاريخ كنيسة",
+                "image": "subject-10.jpg",
+                "download": "files/tareekh-kanisa.pdf",
+                "downloads": 2900
+            }
+        ],
+        "الكتاب المقدس": [
+            {
+                "name": "تفسير عهد جديد",
+                "image": "subject-21.jpeg",
+                "download": "files/tafsir-nt.pdf",
+                "downloads": 5100
+            },
+            {
+                "name": "تفسير عهد قديم",
+                "image": "subject-12.jpg",
+                "download": "files/tafsir-ot.pdf",
+                "downloads": 4800
+            },
+            {
+                "name": "مقدمات عهد جديد",
+                "image": "subject-13.jpg",
+                "download": "files/moqadmat-nt.pdf",
+                "downloads": 2600
+            },
+            {
+                "name": "مقدمات عهد قديم",
+                "image": "subject-14.jpg",
+                "download": "files/moqadmat-ot.pdf",
+                "downloads": 2400
+            }
+        ],
+        "اللغات": [
+            {
+                "name": "لغة انجليزية",
+                "image": "subject-15.jpg",
+                "download": "files/english.pdf",
+                "downloads": 1800
+            },
+            {
+                "name": "لغة عربية",
+                "image": "subject-16.jpg",
+                "download": "files/arabic.pdf",
+                "downloads": 2200
+            },
+            {
+                "name": "لغة قبطية",
+                "image": "subject-17.jpg",
+                "download": "files/coptic.pdf",
+                "downloads": 4000
+            }
+        ]
+    },
+    "الثانية": {
+        "العلوم الفلسفية والتربوية": [
+            {
+                "name": "العلم والكتاب",
+                "image": "subject-18.jpg",
+                "download": "files/elm-wel-ketab.pdf",
+                "downloads": 1200
+            },
+            {
+                "name": "مشورة",
+                "image": "subject-18.jpg",
+                "download": "files/mashora.pdf",
+                "downloads": 650
+            }
+        ]
+    },
+    "الثالثة": {
+        "العلوم الفلسفية والتربوية": [
+            {
+                "name": "تربية وعلم نفس",
+                "image": "subject-19.jpg",
+                "download": "files/tarbia-psychology.pdf",
+                "downloads": 950
+            },
+            {
+                "name": "طب حديث",
+                "image": "subject-20.jpg",
+                "download": "files/modern-medicine.pdf",
+                "downloads": 620
+            }
+        ],
+        "العلوم اللاهوتية": [
+            {
+                "name": "حساب الابقطي",
+                "image": "subject-1.jpg",
+                "download": "files/abokaty.pdf",
+                "downloads": 410
+            },
+            {
+                "name": "ل. روحي",
+                "image": "subject-2.jpg",
+                "download": "files/roh7y.pdf",
+                "downloads": 1300
+            },
+            {
+                "name": "ل. طقسي",
+                "image": "subject-4.jpg",
+                "download": "files/taqosy.pdf",
+                "downloads": 900
+            },
+            {
+                "name": "ل. عقيدي",
+                "image": "subject-3.jpg",
+                "download": "files/aqeedy.pdf",
+                "downloads": 1400
+            },
+            {
+                "name": "ل. مقارن",
+                "image": "subject-4.jpg",
+                "download": "files/mokaren.pdf",
+                "downloads": 780
+            }
+        ],
+        "العلوم والفنون الكنسية": [
+            {
+                "name": "ابائيات",
+                "image": "subject-5.jpg",
+                "download": "files/aba2yat.pdf",
+                "downloads": 2400
+            },
+            {
+                "name": "الحان",
+                "image": "subject-22.jpeg",
+                "download": "files/al7an.pdf",
+                "downloads": 3600
+            },
+            {
+                "name": "تاريخ كنيسة",
+                "image": "subject-10.jpg",
+                "download": "files/tareekh-kanisa.pdf",
+                "downloads": 3100
+            },
+            {
+                "name": "علم المخطوطات",
+                "image": "subject-8.jpg",
+                "download": "files/manuscripts.pdf",
+                "downloads": 500
+            },
+            {
+                "name": "قوانين كنيسة",
+                "image": "subject-7.jpg",
+                "download": "files/canon-law.pdf",
+                "downloads": 870
+            }
+        ],
+        "الكتاب المقدس": [
+            {
+                "name": "تفسير عهد جديد",
+                "image": "subject-21.jpeg",
+                "download": "files/tafsir-nt.pdf",
+                "downloads": 5300
+            },
+            {
+                "name": "تفسير عهد قديم",
+                "image": "subject-12.jpg",
+                "download": "files/tafsir-ot.pdf",
+                "downloads": 4900
+            },
+            {
+                "name": "مقدمات عهد جديد",
+                "image": "subject-13.jpg",
+                "download": "files/moqadmat-nt.pdf",
+                "downloads": 2700
+            },
+            {
+                "name": "مقدمات عهد قديم",
+                "image": "subject-14.jpg",
+                "download": "files/moqadmat-ot.pdf",
+                "downloads": 2500
+            },
+            {
+                "name": "وعظ",
+                "image": "subject-24.jpg",
+                "download": "files/preaching.pdf",
+                "downloads": 1900
+            }
+        ],
+        "اللغات": [
+            {
+                "name": "لغة عبرية",
+                "image": "subject-18.jpg",
+                "download": "files/hebrew.pdf",
+                "downloads": 1200
+            },
+            {
+                "name": "لغة قبطية",
+                "image": "subject-14.jpg",
+                "download": "files/coptic.pdf",
+                "downloads": 4200
+            },
+            {
+                "name": "لغة يونانية",
+                "image": "subject-13.jpg",
+                "download": "files/greek.pdf",
+                "downloads": 980
+            }
+        ]
+    },
+    "الرابعة": {
+        "العلوم الفلسفية والتربوية": [
+            {
+                "name": "علم اجتماع",
+                "image": "subject-12.jpg",
+                "download": "files/sociology.pdf",
+                "downloads": 700
+            }
+        ],
+        "العلوم اللاهوتية": [
+            {
+                "name": "تاريخ اديان",
+                "image": "subject-8.jpg",
+                "download": "files/history-of-religions.pdf",
+                "downloads": 1100
+            },
+            {
+                "name": "حوارات مسكونية",
+                "image": "subject-7.jpg",
+                "download": "files/ecumenical-dialogue.pdf",
+                "downloads": 650
+            },
+            {
+                "name": "ل. روحي",
+                "image": "subject-3.jpg",
+                "download": "files/roh7y.pdf",
+                "downloads": 1600
+            },
+            {
+                "name": "ل. طقسي",
+                "image": "subject-4.jpg",
+                "download": "files/taqosy.pdf",
+                "downloads": 1100
+            },
+            {
+                "name": "ل. عقيدي",
+                "image": "subject-5.jpg",
+                "download": "files/aqeedy.pdf",
+                "downloads": 1700
+            }
+        ],
+        "العلوم والفنون الكنسية": [
+            {
+                "name": "ابائيات",
+                "image": "subject-8.jpg",
+                "download": "files/aba2yat.pdf",
+                "downloads": 2600
+            },
+            {
+                "name": "احوال شخصية",
+                "image": "subject-19.jpg",
+                "download": "files/personal-status.pdf",
+                "downloads": 900
+            },
+            {
+                "name": "الحان",
+                "image": "subject-22.jpeg",
+                "download": "files/al7an.pdf",
+                "downloads": 3800
+            },
+            {
+                "name": "تاريخ كنيسة",
+                "image": "subject-10.jpg",
+                "download": "files/tareekh-kanisa.pdf",
+                "downloads": 3300
+            },
+            {
+                "name": "قوانين كنيسة",
+                "image": "subject-20.jpg",
+                "download": "files/canon-law.pdf",
+                "downloads": 1200
+            }
+        ],
+        "الكتاب المقدس": [
+            {
+                "name": "تفسير عهد جديد",
+                "image": "subject-21.jpeg",
+                "download": "files/tafsir-nt.pdf",
+                "downloads": 5600
+            },
+            {
+                "name": "تفسير عهد قديم",
+                "image": "subject-12.jpg",
+                "download": "files/tafsir-ot.pdf",
+                "downloads": 5200
+            },
+            {
+                "name": "مقدمات عهد جديد",
+                "image": "subject-13.jpg",
+                "download": "files/moqadmat-nt.pdf",
+                "downloads": 3000
+            },
+            {
+                "name": "مقدمات عهد قديم",
+                "image": "subject-14.jpg",
+                "download": "files/moqadmat-ot.pdf",
+                "downloads": 2800
+            },
+            {
+                "name": "وعظ",
+                "image": "subject-20.jpg",
+                "download": "files/preaching.pdf",
+                "downloads": 2100
+            }
+        ],
+        "اللغات": [
+            {
+                "name": "لغة عبرية",
+                "image": "subject-13.jpg",
+                "download": "files/hebrew.pdf",
+                "downloads": 1400
+            },
+            {
+                "name": "لغة قبطية",
+                "image": "subject-17.jpg",
+                "download": "files/coptic.pdf",
+                "downloads": 4500
+            },
+            {
+                "name": "لغة يونانية",
+                "image": "subject-11.jpg",
+                "download": "files/greek.pdf",
+                "downloads": 1100
+            }
+        ]
+    }
+}

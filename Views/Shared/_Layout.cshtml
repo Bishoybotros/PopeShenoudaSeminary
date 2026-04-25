@@ -1,0 +1,52 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>@ViewData["Title"] - كلية البابا شنودة الثالث</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Changa:wght@200..800&family=Jost:wght@100..900&display=swap">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/libs/bootstrap/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="~/libs/plyr/plyr.css" />
+    <link rel="stylesheet" href="~/libs/owl/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="~/libs/icons/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    @Html.Partial("_Header")
+
+    <!-- ===== NAVBAR ===== -->
+    @Html.Partial("_Navbar")
+
+    <!-- ===== PAGE CONTENT ===== -->
+    <main class="container-fluid p-0">
+        @RenderBody()
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    @Html.Partial("_Footer")
+
+    <!-- JS -->
+    <script src="~/libs/jquery/jquery-3.7.1.min.js"></script>
+    <script src="~/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/libs/plyr/plyr.polyfilled.js"></script>
+    <script src="~/libs/owl/owl.carousel.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.16/dist/lenis.min.js"></script>
+    <script src="~/js/main.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

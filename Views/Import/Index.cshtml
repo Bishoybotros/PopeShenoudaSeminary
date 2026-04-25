@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Import Grades";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mb-4 mt-4">
+            <div class="card-header text-bg-primary">
+                <h3 class="card-title text-white mb-0">Import Grades via Excel</h3>
+            </div>
+
+            <div class="card-body">
+                <p class="text-muted">
+                    Please upload an Excel file (.xlsx) containing the grades. <br />
+                    <strong>Format expected:</strong> Column 1 = StudentId, Column 2 = SubjectId, Column 3 = Score.
+                </p>
+
+                <form asp-controller="Import" asp-action="ImportGrades" method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" class="form-control" accept=".xlsx" required />
+                    <button type="submit" class="btn btn-primary mt-3">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

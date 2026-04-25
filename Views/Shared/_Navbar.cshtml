@@ -1,0 +1,119 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+
+        <!-- TOGGLER -->
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- MOBILE SEARCH -->
+        <form class="d-flex d-lg-none ms-2"
+              asp-controller="Search"
+              asp-action="Index"
+              method="get">
+            <input class="form-control me-2"
+                   type="search"
+                   name="q"
+                   placeholder="هل تبحث عن شئ ما">
+            <button class="btn btn-warning" type="submit">بحث</button>
+        </form>
+
+        <!-- NAV CONTENT -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <!-- HOME -->
+                <li class="nav-item">
+                    <a class="nav-link"
+                       asp-controller="Home"
+                       asp-action="Index">
+                        الصفحة الرئيسية
+                    </a>
+                </li>
+
+                <!-- ABOUT -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        عن الكلية
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Home"
+                               asp-action="About">
+                                عن الكلية
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Home"
+                               asp-action="StudiesSystem">
+                                نظام الدراسة والامتحانات
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- TEACHERS -->
+                <li class="nav-item">
+                    <a class="nav-link"
+                       asp-controller="Home"
+                       asp-action="Teachers">
+                        أعضاء هيئة التدريس
+                    </a>
+                </li>
+
+                <!-- GRADES -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        الدراسات الأكاديمية
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-controller="Grades" asp-action="One">مواد السنة الأولى</a></li>
+                        <li><a class="dropdown-item" asp-controller="Grades" asp-action="Two">مواد السنة الثانية</a></li>
+                        <li><a class="dropdown-item" asp-controller="Grades" asp-action="Three">مواد السنة الثالثة</a></li>
+                        <li><a class="dropdown-item" asp-controller="Grades" asp-action="Four">مواد السنة الرابعة</a></li>
+                    </ul>
+                </li>
+
+                <!-- APPLICATION -->
+                <li class="nav-item">
+                    <a href="#"
+                       class="nav-link"
+                       data-bs-toggle="modal"
+                       data-bs-target="#applicationsModal">
+                        طلبات الإلتحاق
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- DESKTOP SEARCH -->
+            <form class="d-none d-lg-flex"
+                  asp-controller="Search"
+                  asp-action="Index"
+                  method="get">
+                <input class="form-control me-2"
+                       type="search"
+                       name="q"
+                       placeholder="هل تبحث عن شئ ما">
+                <button class="btn btn-warning" type="submit">بحث</button>
+            </form>
+
+        </div>
+    </div>
+</nav>

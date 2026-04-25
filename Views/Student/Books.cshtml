@@ -1,0 +1,45 @@
+﻿@model List<PopeShenoudaSeminary.Models.Book>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">📚 My Books</h2>
+
+    <div class="row">
+
+        @foreach (var book in Model)
+        {
+            <div class="col-md-3 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body text-center">
+
+                        <img src="/images/pdf.png"
+                             style="width:60px"
+                             class="mb-3" />
+
+                        <h5 class="card-title">
+                            @book.Title
+                        </h5>
+
+                        <a href="@book.FilePath"
+                           target="_blank"
+                           class="btn btn-primary mt-2">
+
+                            Download PDF
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

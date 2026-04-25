@@ -1,0 +1,356 @@
+﻿@{
+    ViewData["Title"] = "الصفحة الرئيسية";
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="site.css">
+<!-- ================================================================== HERO -->
+<div class="page-header">
+    <div class="container">
+        <div class="ph-inner">
+            <h2></h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a class="nav-link" asp-controller="Account" asp-action="Login">
+                            تسجيل الدخول
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                         
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="hero-section">
+    <div class="hero-section-inner">
+        <img src="~/images/slider/slide-1.jpeg" alt="slider-image">
+    </div>
+</div><!-- ~/hero-section -->
+<!-- ================================================================== ABOUT -->
+
+<div class="section about-section">
+    <div class="container">
+        <div class="transform-content">
+            <h2 class="section-title"><span class="text-primary">منارة</span> لاهوتية تعليمية</h2>
+            <p>
+                تُعد كلية <span class="text-primary">البابا شنودة الثالث الإكليريكية</span> من أهم الكليات
+                اللاهوتية، وتقع في شبرا الخيمة داخل
+                كنيسة الشهيد العظيم مار جرجس بمقر مطرانية شبرا الخيمة وتوابعها بجوار المطافئ بمحطة كلية
+                الزراعة. تأسست الكلية سنة <span class="text-primary">1988</span> ثم أصدر قداسة البابا شنودة
+                قرار اعتمادها كلية رسمية عام
+                2002م. تقدم الكلية برنامج <span class="text-primary">بكالوريوس العلوم اللاهوتية</span>
+                المعتمد من الكنيسة.
+            </p>
+        </div>
+
+        <div class="plyr__video-embed" id="player">
+            <iframe src="https://www.youtube.com/embed/5umtdeIeHJ0?si=T4RZLz8ryrxIJv8s"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+</div><!-- ~/about-section -->
+<!-- ================================================================== ACADEMY INFO -->
+<div class="section buzzle-section academic-info-section">
+    <div class="bz-inner-content">
+        <div class="academic-info-section-row student-schedule">
+            <div class="image">
+                <img src="~/images/about/about-41.jpeg" alt="image">
+            </div>
+            <div class="text">
+                <h2 class="mb-4">مواعيد استقبال الطلبة <br> الجدد</h2>
+                <p>
+                    <strong>أولاً:</strong> التقديم اعتباراً من اول سبتمبر من كل عام، كل أيام الأسبوع ما عدا
+                    الأحد والأربعاء والجمعة من الساعة 5 م حتى 8 م.
+                </p>
+                <p><strong>ثانياً: المستندات المطلوبة:</strong></p>
+                <ul>
+                    <li>تزكية أب الاعتراف</li>
+                    <li>أصل المؤهل أو مستخرج رسمي</li>
+                    <li>صورة البطاقة</li>
+                    <li>عدد 6 صور شخصية 4×6</li>
+                    <li>دوسية بلاستيك محفظة</li>
+                </ul>
+            </div>
+        </div>
+        <div class="academic-info-section-row study-schedule">
+            <div class="text">
+                <h2 class="mb-4">مواعيد الدراسة ونظام <br> الامتحانات</h2>
+                <ul>
+                    <li>
+                        تبدأ الدراسة يوم رأس السنة القبطية في الأول من أكتوبر من كل عام بحفل كبير يرأسه
+                        نيافة الأنبا مرقس.
+                    </li>
+                    <li>تنتهي الدراسة في النصف الأول من شهر مايو.</li>
+                    <li>أيام الدراسة: السبت – الاثنين – الثلاثاء – الخميس من 5 مساءً حتى 9 مساءً.</li>
+                    <li>يحرم الطالب من دخول الامتحان إذا تجاوز نسبة الغياب عن 25%.</li>
+                    <li>يعتبر الطالب باقياً للإعادة إذا رسب في ثلاث مواد أو أكثر.</li>
+                    <li>امتحانات آخر العام في الأول من مايو.</li>
+                    <li>امتحانات التخلف لسنوات النقل في أول سبتمبر.</li>
+                </ul>
+            </div>
+            <div class="image">
+                <img src="~/images/about/about-40.jpeg" alt="image">
+            </div>
+        </div>
+    </div>
+</div><!-- ~/academic-info-section-->
+<!-- ================================================================== TEACHERS -->
+@* <div class="section teachers-section">
+    <div class="container">
+        <h2 class="section-title"><span class="text-primary">هيئة</span> تعليمية متميزة</h2>
+        <p class="fs-5 mb-5">
+            هيئة تعليمية متميزة تضم نخبة من الآباء والكهنة والأساتذة المتخصصين، يجمعون بين
+            العمق الروحي
+            والخبرة الأكاديمية. يعملون بروح الخدمة والأمانة لتقديم تعليم لاهوتي أصيل يهدف إلى تكوين خدام
+            واعين وقادرين على خدمة الكنيسة والمجتمع.
+        </p>
+
+        <div class="owl-carousel">
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-1.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>نيافة الحبر الجليل الانبا مرقس</h6>
+                    <span>
+                        مطران شبرا الخيمة وتوابعها <br> عميد كلية البابا شنودة الثالث <br> مدرس مادة
+                        اللاهوت الروحي
+                    </span>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-2.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>أ.د اشرف جميل</h6>
+                    <p>مدرس مادة مناهج البحث</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-3.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القس اندراوس فؤاد</h6>
+                    <p>مدرس مادة اللغة اليونانية</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-4.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القس بطرس عاطف</h6>
+                    <p>مدرس مادة اللاهوت الطقسي</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-5.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص إبراهيم إبراهيم</h6>
+                    <p>مدرس مادة تفسير عهد جديد</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-6.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص انطونيوس عزوز</h6>
+                    <p>مدرس مادة اللاهوت المقارن والحوارات المسكونية</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-7.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص اينيانوس صليب</h6>
+                    <p>مدرس مادة العلم والكتاب</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-8.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص حزقيال لطفي</h6>
+                    <p>مدرس مادة الأحوال الشخصية</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-9.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص الدكتور مكارى القمص تادرس</h6>
+                    <p>مدرس مادة اللاهوت العقيدى والنظرى</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-10.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص ويصا عزيز</h6>
+                    <p>مدرس مادة اللاهوت الطقسى</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-11.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص يسطس فوزي </h6>
+                    <p>مدرس مادة تاريخ كنيسة</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-12.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>د. لويز لبيب</h6>
+                    <p>مدرس مادة علم النفس والاجتماع</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-13.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>د. نرمين رزق الله</h6>
+                    <p>مدرس مادة علم المخطوطات</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-14.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القمص ميخائيل جريس</h6>
+                    <p>مدرس مادة تاريخ كنيسة</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-15.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>بيشوي اسحاق</h6>
+                    <p>مدرس اللغة القبطية والابائيات</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-16.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>المُعلم اسحاق حنا</h6>
+                    <p>مدرس مادة الالحان والتسبحة</p>
+                </div>
+            </div>
+
+            <div class="teacher-item">
+                <img src="~/images/teachers/teacher-17.jpeg" alt="teacher-image">
+                <div class="item-detail">
+                    <h6>القس سيلا وديع</h6>
+                    <p>مدرس مادة اللغة الانجليزية</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div><!-- ~/teachers-section -->
+ *@
+ 
+ <!-- ================================================================== ALERT -->
+<div class="section duration-alert">
+    <div class="container">
+        <div class="alert-item">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+                    <path fill="#962c2c"
+                          d="m55 35.1l7.5 7.4l-33.3 15.9s-4.4 2-6.5-1.2C14.5 44.4 55 35.1 55 35.1" />
+                    <path fill="#d9e3e8"
+                          d="M28.4 49.1s-6.4 2.2-5.2 6.5c1.2 4.4 6.3 1.7 6.3 1.7l31.6-14.7s-1.8-4.7 1.4-7.8z" />
+                    <path fill="#ffce31" d="M33.7 5L64 34.5l-35.8 14l-23-35.8z" />
+                    <path fill="#fff" d="m34.6 11.7l5.8 6.2l-21.7 7.8l-5.1-7.9z" />
+                    <path fill="#94989b"
+                          d="m61 38l-21.1 8.6l20.8-9.5zm-.3 2.6l-22.5 9.3l22.1-10.3zm.2 1.4L32.2 54.5l28.3-13.4z" />
+                    <path fill="#ff8736"
+                          d="M22.7 57.2c-3.5-7.3 5.5-8.6 5.5-8.6l-23-35.9S0 12.6 0 18c0 2.2 1 3.9 1 3.9z" />
+                </svg>
+            </div>
+            <div class="text">
+                <h5>مدة الدراسة والدرجة العلمية</h5>
+                <p class="mb-0">
+                    عدد سنوات الدراسة بالكلية أربع سنوات يحصل الطالب بعد اجتيازها بنجاح على
+                    بكالوريوس في
+                    العلوم
+                    اللاهوتية.
+                </p>
+            </div>
+        </div>
+    </div>
+</div><!-- ~/duration-alert -->
+<!-- ================================================================== ALERT -->
+<!-- PROGRESS BAR WITH SCROLLING -->
+<div id="scroll-progress"></div>
+
+<!-- PELOADER -->
+<div class="preloader">
+    <span>LOADING</span>
+    <span class="loader"></span>
+</div>
+
+<!-- BACKTOTOP -->
+<button id="backToTop" class="btn back-to-top">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- APPLICATIONS MODAL -->
+<div class="modal fade applications-modal" id="applicationsModal" tabindex="-1"
+     aria-labelledby="applicationsModalLabel" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="applicationsModalLabel">
+                    الالتحاق بكلية البابا شنودة الثالث
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8 order-2 order-lg-1 right-content">
+                        <p class="mb-3">
+                            يرجى من السادة الراغبين في التقدم للالتحاق بالكلية اتباع الخطوات التالية:
+                        </p>
+
+                        <ol class="mb-4">
+                            <li>تحميل استمارة الالتحاق بصيغة <strong>PDF</strong>.</li>
+                            <li>تعبئة جميع البيانات المطلوبة بدقة ووضوح.</li>
+                            <li>
+                                إرسال الاستمارة بعد استكمالها إلى البريد الإلكتروني التالي:
+                                <br>
+                                <a href="mailto:admission@xxxxxxxx.com" class="fw-bold">
+                                    admission@xxxxxxxx.com
+                                </a>
+                            </li>
+                        </ol>
+
+                        <p class="small text-muted">
+                            يمكن إرسال الاستمارة بالضغط مباشرة على البريد الإلكتروني أو بنسخه
+                            وإرساله من خلال بريدكم الشخصي.
+                        </p>
+
+                        <div class="mt-4">
+                            <a href="~/files/application.pdf" class="btn btn-saint" download>
+                                <i class="bi bi-cloud-arrow-down"></i>
+                                تحميل استمارة الالتحاق
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 order-1 order-lg-2 left-image text-center text-lg-start">
+                        <img src="~/svg/form.svg" alt="form-svg-image">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+﻿<form asp-action="AddStudentGrade" method="post">
+
+    <label>Student</label>
+    <select name="StudentId">
+        @foreach (var stu in ViewBag.Students)
+        {
+            <option value="@stu.Id">@stu.FullName</option>
+        }
+    </select>
+
+    <label>Subject</label>
+    <select name="SubjectId">
+        @foreach (var sub in ViewBag.Subjects)
+        {
+            <option value="@sub.Id">@sub.Name</option>
+        }
+    </select>
+
+    <label>Score</label>
+    <input type="number" name="Score" />
+
+    <button type="submit">Save</button>
+
+</form>

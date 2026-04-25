@@ -1,0 +1,111 @@
+﻿@model PopeShenoudaSeminary.ViewModels.StudentDashboardViewModel
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">🎓 Student Dashboard</h2>
+
+    <div class="row">
+
+        <!-- BOOKS -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+
+                <div class="card-header">
+                    📚 My Books
+                </div>
+
+                <div class="card-body">
+
+                    @foreach (var book in Model.Books.Take(3))
+                    {
+                        <div class="d-flex justify-content-between mb-2">
+
+                            <span>@book.Title</span>
+
+                            <a href="@book.FilePath" class="btn btn-sm btn-primary">
+                                Download
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- LECTURES -->
+       @*  <div class="col-md-6 mb-4">
+            <div class="card shadow">
+
+                <div class="card-header">
+                    🎥 My Lectures
+                </div>
+
+                <div class="card-body">
+
+                    @foreach (var lec in Model.Lectures.Take(3))
+                    {
+                        <p>@lec.Title</p>
+                    }
+
+                </div>
+
+            </div>
+        </div> *@
+
+        <!-- GRADES -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+
+                <div class="card-header">
+                    📊 My Grades
+                </div>
+
+                <div class="card-body">
+
+                    @foreach (var g in Model.Grades)
+                    {
+                        <div class="d-flex justify-content-between">
+
+                            <span>@g.Subject.Name</span>
+
+                            <span class="badge bg-success">
+                                @g.Score
+                            </span>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SCHEDULE -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+
+                <div class="card-header">
+                    📅 My Schedule
+                </div>
+
+                <div class="card-body">
+
+                    @foreach (var s in Model.Schedule)
+                    {
+                        <p>
+                            <strong>@s.Day</strong>
+                            @s.Subject.Name
+                            (@s.Time)
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
