@@ -1,0 +1,259 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<PopeShenoudaSeminary.Models.StudentSubjectGrade>
+
+@{
+    ViewData["Title"] = "درجاتي";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --navy: #1a3a5c;
+            --gold: #b8933a;
+            --surface: #f5f6f8;
+            --border: #e4e7ec;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(26,58,92,.08);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg,#1a3a5c,#234d7a);
+            padding: 2rem 0 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+            .page-header h1 {
+                color: #fff;
+                font-size: 1.5rem;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            .page-header p {
+                color: rgba(255,255,255,.6);
+                font-size: .85rem;
+                margin: .3rem 0 0;
+            }
+
+        .back-link {
+            color: rgba(255,255,255,.7);
+            font-size: .83rem;
+            text-decoration: none;
+        }
+
+            .back-link:hover {
+                color: #fff;
+            }
+
+        .grades-card {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .grades-table {
+            margin: 0;
+        }
+
+            .grades-table thead th {
+                background: rgba(26,58,92,.05);
+                color: var(--navy);
+                font-size: .78rem;
+                font-weight: 700;
+                letter-spacing: .06em;
+                text-transform: uppercase;
+                border-bottom: 2px solid var(--border);
+                padding: .85rem 1.25rem;
+            }
+
+            .grades-table tbody td {
+                padding: .9rem 1.25rem;
+                vertical-align: middle;
+                border-bottom: 1px solid var(--border);
+                font-size: .9rem;
+            }
+
+            .grades-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .grades-table tbody tr:hover {
+                background: rgba(26,58,92,.025);
+            }
+
+        .subject-name {
+            font-weight: 600;
+            color: #1e2535;
+        }
+
+        .score-pill {
+            display: inline-block;
+            padding: .3rem .85rem;
+            border-radius: 20px;
+            font-size: .82rem;
+            font-weight: 700;
+        }
+
+        .score-excellent {
+            background: rgba(22,128,60,.12);
+            color: #16803c;
+        }
+
+        .score-good {
+            background: rgba(37,99,235,.1);
+            color: #1d4ed8;
+        }
+
+        .score-average {
+            background: rgba(184,147,58,.15);
+            color: #92400e;
+        }
+
+        .score-pass {
+            background: rgba(124,45,18,.1);
+            color: #7c2d12;
+        }
+
+        .score-fail {
+            background: rgba(220,38,38,.1);
+            color: #dc2626;
+        }
+
+        .bar-cell {
+            width: 220px;
+        }
+
+        .mini-bar-wrap {
+            height: 6px;
+            background: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .mini-bar {
+            height: 100%;
+            border-radius: 99px;
+        }
+
+        .summary-box {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .summary-val {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .summary-lbl {
+            font-size: .8rem;
+            color: #6b7280;
+            margin-top: .2rem;
+        }
+    </style>
+}
+
+<div class="page-header">
+    <div class="container">
+        <a asp-controller="Student" asp-action="Dashboard" class="back-link">
+            <i class="bi bi-arrow-right"></i> العودة للوحة الطالب
+        </a>
+        <h1 class="mt-2">درجاتي</h1>
+        <p>نتائجك الأكاديمية للفصل الدراسي الحالي</p>
+    </div>
+</div>
+
+<div class="container pb-4">
+
+    <!-- Summary row -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="summary-box">
+                <div class="summary-val">@Model.Count</div>
+                <div class="summary-lbl">إجمالي المواد</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="summary-box">
+                <div class="summary-val" style="color:#16803c">@Model.Count(g => g.Score >= 50)</div>
+                <div class="summary-lbl">مواد ناجحة</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="summary-box">
+                <div class="summary-val" style="color:#dc2626">@Model.Count(g => g.Score < 50)</div>
+                <div class="summary-lbl">مواد راسبة</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="summary-box">
+                <div class="summary-val" style="color:var(--gold)">
+                    @(Model.Any() ? Math.Round(Model.Average(g => (double)g.Score), 1).ToString() : "—")
+                </div>
+                <div class="summary-lbl">المتوسط العام</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grades table -->
+    <div class="grades-card">
+        <table class="table grades-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>المادة</th>
+                    <th class="bar-cell d-none d-md-table-cell">التقدم</th>
+                    <th>الدرجة</th>
+                    <th>التقدير</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                }
+                @foreach (var g in Model.OrderByDescending(x => x.Score))
+                {
+                    var pct = Math.Min((double)g.Score, 100);
+                    var bar = g.Score >= 85 ? "#16803c"
+                    : g.Score >= 75 ? "#2563eb"
+                    : g.Score >= 60 ? "#b8933a"
+                    : g.Score >= 50 ? "#92400e"
+                    : "#dc2626";
+                    var cls = g.Score >= 85 ? "score-excellent"
+                    : g.Score >= 75 ? "score-good"
+                    : g.Score >= 60 ? "score-average"
+                    : g.Score >= 50 ? "score-pass"
+                    : "score-fail";
+                    var label = g.Score >= 85 ? "ممتاز"
+                    : g.Score >= 75 ? "جيد جداً"
+                    : g.Score >= 60 ? "جيد"
+                    : g.Score >= 50 ? "مقبول"
+                    : "راسب";
+                    <tr>
+                        <td style="color:#6b7280;font-size:.8rem">@(i++)</td>
+                        <td><span class="subject-name">@g.Subject.Name</span></td>
+                        <td class="bar-cell d-none d-md-table-cell">
+                            <div class="mini-bar-wrap">
+                                <div class="mini-bar" style="width:@(pct)%;background:@bar;"></div>
+                            </div>
+                        </td>
+                        <td><strong>@g.Score</strong></td>
+                        <td><span class="score-pill @cls">@label</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

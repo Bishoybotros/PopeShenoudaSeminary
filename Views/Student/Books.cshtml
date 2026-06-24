@@ -1,45 +1,186 @@
 ﻿@model List<PopeShenoudaSeminary.Models.Book>
 
 @{
+    ViewData["Title"] = "كتبي";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-4">
-
-    <h2 class="mb-4">📚 My Books</h2>
-
-    <div class="row">
-
-        @foreach (var book in Model)
-        {
-            <div class="col-md-3 mb-4">
-
-                <div class="card shadow-sm h-100">
-
-                    <div class="card-body text-center">
-
-                        <img src="/images/pdf.png"
-                             style="width:60px"
-                             class="mb-3" />
-
-                        <h5 class="card-title">
-                            @book.Title
-                        </h5>
-
-                        <a href="@book.FilePath"
-                           target="_blank"
-                           class="btn btn-primary mt-2">
-
-                            Download PDF
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
+@section Styles {
+    <style>
+        :root {
+            --navy: #1a3a5c;
+            --gold: #b8933a;
+            --surface: #f5f6f8;
+            --border: #e4e7ec;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(26,58,92,.08);
         }
 
-    </div>
+        .page-header {
+            background: linear-gradient(135deg,#1a3a5c,#234d7a);
+            padding: 2rem 0 1.75rem;
+            margin-bottom: 2rem;
+        }
 
+            .page-header h1 {
+                color: #fff;
+                font-size: 1.5rem;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            .page-header p {
+                color: rgba(255,255,255,.6);
+                font-size: .85rem;
+                margin: .3rem 0 0;
+            }
+
+        .back-link {
+            color: rgba(255,255,255,.7);
+            font-size: .83rem;
+            text-decoration: none;
+        }
+
+            .back-link:hover {
+                color: #fff;
+            }
+
+        .book-card {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+            .book-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 24px rgba(26,58,92,.14);
+            }
+
+        .book-thumb {
+            background: linear-gradient(135deg, rgba(26,58,92,.07), rgba(184,147,58,.1));
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .book-thumb i {
+                font-size: 3rem;
+                color: var(--navy);
+                opacity: .7;
+            }
+
+        .book-card-body {
+            padding: 1.1rem 1.25rem;
+            flex: 1;
+        }
+
+        .book-card-title {
+            font-size: .93rem;
+            font-weight: 700;
+            color: #1e2535;
+            line-height: 1.4;
+            margin-bottom: .4rem;
+        }
+
+        .book-card-meta {
+            font-size: .78rem;
+            color: #6b7280;
+        }
+
+        .book-card-footer {
+            padding: .9rem 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-download {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: .5rem;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 8px;
+            font-size: .84rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s;
+        }
+
+            .btn-download:hover {
+                background: #234d7a;
+                color: #fff;
+            }
+
+            .btn-download i {
+                margin-left: .4rem;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+
+            .empty-state i {
+                font-size: 3rem;
+                color: var(--border);
+            }
+
+            .empty-state p {
+                color: #6b7280;
+                margin-top: 1rem;
+            }
+    </style>
+}
+
+<div class="page-header">
+    <div class="container">
+        <a asp-controller="Student" asp-action="Dashboard" class="back-link">
+            <i class="bi bi-arrow-right"></i> العودة للوحة الطالب
+        </a>
+        <h1 class="mt-2">كتبي</h1>
+        <p>@Model.Count كتاب متاح للتحميل</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <i class="bi bi-book"></i>
+            <p>لا توجد كتب متاحة حالياً</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var book in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="book-card">
+                        <div class="book-thumb">
+                            <i class="bi bi-file-earmark-pdf-fill"></i>
+                        </div>
+                        <div class="book-card-body">
+                            <div class="book-card-title">@book.Title</div>
+                            <div class="book-card-meta">
+                                <i class="bi bi-file-pdf"></i> ملف PDF
+                            </div>
+                        </div>
+                        <div class="book-card-footer">
+                            <a href="@book.FilePath" target="_blank" class="btn-download">
+                                <i class="bi bi-download"></i> تحميل الكتاب
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
