@@ -13,6 +13,25 @@ namespace PopeShenoudaSeminary.Controllers
         {
             _context = context;
         }
+        public IActionResult Subjects()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            var student = _context.Users
+                .FirstOrDefault(u => u.Id == userId);
+
+            if (student == null)
+                return RedirectToAction("Login", "Account");
+
+            var subjects = _context.Subjects
+                .Where(s => s.GradeId == student.GradeId)
+                .ToList();
+
+            return View(subjects);
+        }
         public IActionResult Books()
         {
             int userId = HttpContext.Session.GetInt32("UserId").Value;
@@ -37,25 +56,39 @@ namespace PopeShenoudaSeminary.Controllers
 
             var model = new StudentDashboardViewModel
             {
-                Books = _context.Books
-                    .Where(b => b.GradeId == student.GradeId)
-                    .ToList(),
+                Subjects = _context.Subjects
+    .Where(s => s.GradeId == student.GradeId)
+    .ToList(),
+                Student = student,
 
-               
+                Books = _context.Books
+        .Where(b => b.GradeId == student.GradeId)
+        .ToList(),
 
                 Grades = _context.StudentSubjectGrades
-                    .Include(g => g.Subject)
-                    .Where(g => g.StudentId == userId)
-                    .ToList(),
+        .Include(g => g.Subject)
+        .Where(g => g.StudentId == userId)
+        .ToList(),
 
                 Schedule = _context.Schedules
-                    .Include(s => s.Subject)
-                    .Where(s => s.GradeId == student.GradeId)
-                    .ToList()
+        .Include(s => s.Subject)
+        .Where(s => s.GradeId == student.GradeId)
+        .ToList()
             };
             return View(model);
         }
         public IActionResult MyGrades()
+        {
+            int userId = HttpContext.Session.GetInt32("UserId").Value;
+
+            var grades = _context.StudentSubjectGrades
+                .Include(x => x.Subject)
+                .Where(x => x.StudentId == userId)
+                .ToList();
+
+            return View(grades);
+        }
+        public IActionResult Grades()
         {
             int userId = HttpContext.Session.GetInt32("UserId").Value;
 

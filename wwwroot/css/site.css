@@ -11,6 +11,11 @@ html {
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+.page-header {
+    background: linear-gradient(to bottom, #198754, #212529);
+    padding: 48px 0;
+    background-repeat: no-repeat;
+}
 
 html {
   position: relative;
@@ -682,10 +687,35 @@ a {
     font-weight: 400;
     font-style: normal;
 }
+.failed-header-row td {
+    background: #fee2e2;
+    color: #b91c1c;
+    font-weight: 700;
+    text-align: center;
+    border-top: 2px solid #ef4444;
+    border-bottom: 2px solid #ef4444;
+    padding: 12px;
+}
 
+.failed-row {
+    background-color: #fef2f2;
+}
+
+    .failed-row:hover {
+        background-color: #fee2e2;
+    }
+
+    .failed-row td {
+        border-color: #fecaca;
+    }
+
+    .failed-row .subject-name {
+        color: #dc2626;
+        font-weight: 700;
+    }
 .page-header {
-    background: linear-gradient(to bottom, #222, transparent);
-    padding: 48px 0;
+    background: linear-gradient(to bottom, #4A2c11, transparent );
+    padding: 0px 0;
     background-repeat: no-repeat;
 }
 

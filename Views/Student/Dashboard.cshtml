@@ -1,5 +1,6 @@
 ﻿@model PopeShenoudaSeminary.ViewModels.StudentDashboardViewModel
 
+
 @{
     ViewData["Title"] = "لوحة الطالب";
 }
@@ -404,13 +405,13 @@
                 </div>
                 <div class="student-info">
                     <p class="section-label mb-1">لوحة الطالب</p>
-                    <h2>@Model.</h2>
-                    <span class="badge-year">السنة الثانية</span>
+                    <h2>@Model?.users?.FirstOrDefault()?.FullName</h2>
+                    <span class="badge-year">@Model?.Grades?.FirstOrDefault()?.Year</span>
                 </div>
                 <div class="d-flex gap-4 me-auto flex-wrap">
                     <div class="hero-divider d-none d-md-block"></div>
                     <div class="hero-stat">
-                        <span class="val">@Model.Grades.Count</span>
+                        <span class="val">@Model.Subjects.Count</span>
                         <span class="lbl">مادة مسجّلة</span>
                     </div>
                     <div class="hero-divider d-none d-md-block"></div>
@@ -441,7 +442,7 @@
                 <div class="quick-stat-card">
                     <div class="qs-icon icon-navy"><i class="bi bi-journal-bookmark-fill"></i></div>
                     <div>
-                        <div class="qs-val">@Model.Grades.Count</div>
+                        <div class="qs-val">@Model.Subjects.Count</div>
                         <div class="qs-label">المواد</div>
                     </div>
                 </div>
@@ -583,22 +584,26 @@
                     </div>
                     <div class="dash-card-body">
                         <div class="d-flex flex-wrap pt-1">
-                            @foreach (var grade in Model.Grades)
+                            @foreach (var subject in Model.Subjects)
                             {
                                 <span class="subject-chip">
                                     <i class="bi bi-circle-fill"></i>
-                                    @grade.Subject.Name
+                                    @subject.Name
                                 </span>
                             }
                         </div>
-                        @if (!Model.Grades.Any())
+                        @if (!Model.Subjects.Any())
                         {
                             <p class="text-muted text-center py-3 mb-0">لا توجد مواد مسجّلة</p>
                         }
                     </div>
                 </div>
             </div>
-
+            <div class="preloader">
+                <span>LOADING</span>
+                <span class="loader"></span>
+            </div>
         </div><!-- /row -->
     </div><!-- /container -->
+    
 </div>

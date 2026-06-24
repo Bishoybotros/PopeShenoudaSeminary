@@ -856,10 +856,7 @@ a {
 }
 
 .btn.btn-saint:hover,
-.btn.btn-saint:active,
-.btn.btn-saint:focus {
-    background-color: #222;
-}
+.btn.btn-saint:active
 
 
 /* -------------------------------------------------------------------------------------- */

@@ -139,6 +139,7 @@
     </style>
 }
 
+
 <div class="page-header">
     <div class="container">
         <a asp-controller="Student" asp-action="Dashboard" class="back-link">
@@ -146,6 +147,10 @@
         </a>
         <h1 class="mt-2">كتبي</h1>
         <p>@Model.Count كتاب متاح للتحميل</p>
+    </div>
+    <div class="preloader">
+        <span>LOADING</span>
+        <span class="loader"></span>
     </div>
 </div>
 

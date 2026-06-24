@@ -175,7 +175,10 @@
 </div>
 
 <div class="container pb-4">
-
+    <div class="preloader">
+        <span>LOADING</span>
+        <span class="loader"></span>
+    </div>
     <!-- Summary row -->
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3">
@@ -221,6 +224,90 @@
             <tbody>
                 @{
                     int i = 1;
+
+                    var passedSubjects = Model
+                    .Where(x => x.Score >= 50)
+                    .OrderByDescending(x => x.Score);
+
+                    var failedSubjects = Model
+                    .Where(x => x.Score < 50)
+                    .OrderByDescending(x => x.Score);
+                }
+
+                @* المواد الناجحة *@
+                @foreach (var g in passedSubjects)
+                {
+                    var pct = Math.Min((double)g.Score, 100);
+                    var bar = g.Score >= 85 ? "#16803c"
+                    : g.Score >= 75 ? "#2563eb"
+                    : g.Score >= 60 ? "#b8933a"
+                    : "#92400e";
+
+                    var cls = g.Score >= 85 ? "score-excellent"
+                    : g.Score >= 75 ? "score-good"
+                    : g.Score >= 60 ? "score-average"
+                    : "score-pass";
+
+                    var label = g.Score >= 85 ? "ممتاز"
+                    : g.Score >= 75 ? "جيد جداً"
+                    : g.Score >= 60 ? "جيد"
+                    : "مقبول";
+
+                    <tr>
+                        <td style="color:#6b7280;font-size:.8rem">@(i++)</td>
+                        <td><span class="subject-name">@g.Subject.Name</span></td>
+                        <td class="bar-cell d-none d-md-table-cell">
+                            <div class="mini-bar-wrap">
+                                <div class="mini-bar" style="width:@(pct)%;background:@bar;"></div>
+                            </div>
+                        </td>
+                        <td><strong>@g.Score</strong></td>
+                        <td><span class="score-pill @cls">@label</span></td>
+                    </tr>
+                }
+
+                @* عنوان المواد الراسبة *@
+                @if (failedSubjects.Any())
+                {
+                    <tr class="failed-header-row">
+                        <td colspan="5">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            المواد الراسبة
+                        </td>
+                    </tr>
+                }
+
+                @* المواد الراسبة *@
+                @foreach (var g in failedSubjects)
+                {
+                    var pct = Math.Min((double)g.Score, 100);
+
+                    <tr class="failed-row">
+                        <td style="color:#dc2626;font-size:.8rem">@(i++)</td>
+                        <td>
+                            <span class="subject-name text-danger fw-bold">
+                                @g.Subject.Name
+                            </span>
+                        </td>
+                        <td class="bar-cell d-none d-md-table-cell">
+                            <div class="mini-bar-wrap">
+                                <div class="mini-bar" style="width:@(pct)%;background:#dc2626;"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <strong class="text-danger">@g.Score</strong>
+                        </td>
+                        <td>
+                            <span class="score-pill score-fail">
+                                راسب
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+@*             <tbody>
+                @{
+                    int i = 1;
                 }
                 @foreach (var g in Model.OrderByDescending(x => x.Score))
                 {
@@ -253,7 +340,7 @@
                     </tr>
                 }
             </tbody>
-        </table>
+ *@        </table>
     </div>
 </div>
 
