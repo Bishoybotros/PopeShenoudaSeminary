@@ -1,64 +1,471 @@
 ﻿@model PopeShenoudaSeminary.Models.User
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "تعديل بيانات الطالب";
 }
 
-<h1>Edit</h1>
+@section Styles {
+    <style>
+        :root {
+            --navy: #1a3a5c;
+            --gold: #b8933a;
+            --surface: #f0f2f5;
+            --card: #fff;
+            --border: #e4e7ec;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(26,58,92,.08);
+        }
 
-<h4>User</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NationalId" class="control-label"></label>
-                <input asp-for="NationalId" class="form-control" />
-                <span asp-validation-for="NationalId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PasswordHash" class="control-label"></label>
-                <input asp-for="PasswordHash" class="form-control" />
-                <span asp-validation-for="PasswordHash" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoleId" class="control-label"></label>
-                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId"></select>
-                <span asp-validation-for="RoleId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GradeId" class="control-label"></label>
-                <select asp-for="GradeId" class="form-control" asp-items="ViewBag.GradeId"></select>
-                <span asp-validation-for="GradeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        .adm-page-header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .adm-page-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        .adm-page-sub {
+            font-size: .8rem;
+            color: #6b7280;
+            margin-top: .15rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: .83rem;
+            padding: .4rem .75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+            .back-btn:hover {
+                background: var(--border);
+                color: var(--navy);
+            }
+
+        .adm-content {
+            padding: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+      
+        .span-2 {
+            grid-column: 1 / -1;
+        }
+
+        .form-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            max-width: 720px;
+            overflow: hidden;
+        }
+
+        .form-card-header {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+        }
+
+        .form-card-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: rgba(37,99,235,.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 1rem;
+        }
+
+        .form-card-header h5 {
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        /* Student identity strip */
+        .student-strip {
+            background: rgba(26,58,92,.03);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+        }
+
+        .stu-avatar-lg {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--navy), #234d7a);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .stu-strip-name {
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .stu-strip-meta {
+            font-size: .77rem;
+            color: #6b7280;
+            margin-top: .1rem;
+        }
+
+        .form-card-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: .4rem;
+        }
+
+            .form-label .req {
+                color: #dc2626;
+            }
+
+            .form-label .opt {
+                color: #9ca3af;
+                font-weight: 400;
+                font-size: .72rem;
+            }
+
+        .form-control-adm {
+            display: block;
+            width: 100%;
+            padding: .58rem .9rem;
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            font-size: .875rem;
+            color: #1e2535;
+            background: var(--surface);
+            transition: border .2s, box-shadow .2s;
+            outline: none;
+            appearance: none;
+        }
+
+            .form-control-adm:focus {
+                border-color: var(--navy);
+                box-shadow: 0 0 0 3px rgba(26,58,92,.1);
+                background: #fff;
+            }
+
+            .form-control-adm[readonly] {
+                background: rgba(26,58,92,.04);
+                color: #6b7280;
+                cursor: not-allowed;
+            }
+
+        select.form-control-adm {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'%3E%3Cpath fill='%236b7280' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left .75rem center;
+            padding-left: 2rem;
+        }
+
+        .pass-wrap {
+            position: relative;
+        }
+
+            .pass-wrap .form-control-adm {
+                padding-left: 2.5rem;
+            }
+
+        .pass-toggle {
+            position: absolute;
+            left: .7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0;
+            font-size: .9rem;
+            transition: color .15s;
+        }
+
+            .pass-toggle:hover {
+                color: var(--navy);
+            }
+
+        .section-divider {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin: .25rem 0;
+        }
+
+            .section-divider span {
+                font-size: .7rem;
+                font-weight: 700;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                color: #9ca3af;
+                white-space: nowrap;
+            }
+
+            .section-divider hr {
+                flex: 1;
+                border-color: var(--border);
+                margin: 0;
+            }
+
+        .text-danger-sm {
+            font-size: .74rem;
+            color: #dc2626;
+            margin-top: .25rem;
+            display: block;
+        }
+
+        .form-card-footer {
+            padding: 1.1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .btn-save {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: #2563eb;
+            color: #fff;
+            padding: .6rem 1.5rem;
+            border-radius: 9px;
+            font-size: .875rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .btn-save:hover {
+                background: #1d4ed8;
+            }
+
+        .btn-cancel {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: .875rem;
+            padding: .6rem 1.1rem;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: transparent;
+            transition: all .15s;
+        }
+
+            .btn-cancel:hover {
+                background: var(--surface);
+                color: var(--navy);
+            }
+
+        /* Change indicator */
+        .form-control-adm.changed {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+        }
+    </style>
+}
+
+<div class="adm-page-header">
+    <a asp-action="Index" class="back-btn">
+        <i class="bi bi-arrow-right"></i> رجوع
+    </a>
+    <div>
+        <h1 class="adm-page-title">تعديل بيانات الطالب</h1>
+        <div class="adm-page-sub">تحديث معلومات @Model.FullName</div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="adm-content">
+    <div class="form-card">
+
+        <div class="form-card-header">
+            <div class="form-card-icon"><i class="bi bi-pencil-fill"></i></div>
+            <h5>تعديل بيانات الطالب</h5>
+        </div>
+
+        <!-- Student identity strip -->
+        <div class="student-strip">
+            <div class="stu-avatar-lg">
+                @(Model.FullName?.Length > 0 ? Model.FullName[0].ToString() : "؟")
+            </div>
+            <div>
+                <div class="stu-strip-name">@Model.FullName</div>
+                <div class="stu-strip-meta">كود: @Model.Code · #@Model.Id</div>
+            </div>
+        </div>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-card-body">
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger" style="font-size:.83rem;border-radius:9px">
+                </div>
+
+                <div class="form-grid">
+
+                    <!-- Personal section -->
+                    <div class="section-divider span-2">
+                        <span>البيانات الشخصية</span><hr>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FullName" class="form-label">
+                            الاسم الكامل <span class="req">*</span>
+                        </label>
+                        <input asp-for="FullName" class="form-control-adm trackable" />
+                        <span asp-validation-for="FullName" class="text-danger-sm"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Code" class="form-label">
+                            الكود <span class="req">*</span>
+                        </label>
+                        <input asp-for="Code" class="form-control-adm trackable" />
+                        <span asp-validation-for="Code" class="text-danger-sm"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="NationalId" class="form-label">
+                            الرقم القومي <span class="req">*</span>
+                        </label>
+                        <input asp-for="NationalId" class="form-control-adm trackable" maxlength="14" />
+                        <span asp-validation-for="NationalId" class="text-danger-sm"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">
+                            البريد الإلكتروني <span class="req">*</span>
+                        </label>
+                        <input asp-for="Email" type="email" class="form-control-adm trackable" />
+                        <span asp-validation-for="Email" class="text-danger-sm"></span>
+                    </div>
+
+                    <!-- Account section -->
+                    <div class="section-divider span-2">
+                        <span>بيانات الحساب</span><hr>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PasswordHash" class="form-label">
+                            كلمة المرور
+                            <span class="opt">(اتركها فارغة للإبقاء على الحالية)</span>
+                        </label>
+                        <div class="pass-wrap">
+                            <input asp-for="PasswordHash" type="password" id="passInput"
+                                   class="form-control-adm trackable" placeholder="••••••••" />
+                            <button type="button" class="pass-toggle" onclick="togglePass()">
+                                <i class="bi bi-eye-fill" id="passEye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="PasswordHash" class="text-danger-sm"></span>
+                    </div>
+
+                    <div></div><!-- spacer -->
+
+                    <div class="form-group">
+                        <label asp-for="RoleId" class="form-label">
+                            الدور <span class="req">*</span>
+                        </label>
+                        <select asp-for="RoleId" class="form-control-adm trackable"
+                                asp-items="ViewBag.RoleId">
+                        </select>
+                        <span asp-validation-for="RoleId" class="text-danger-sm"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="GradeId" class="form-label">
+                            السنة الدراسية <span class="req">*</span>
+                        </label>
+                        <select asp-for="GradeId" class="form-control-adm trackable"
+                                asp-items="ViewBag.GradeId">
+                        </select>
+                        <span asp-validation-for="GradeId" class="text-danger-sm"></span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-card-footer">
+                <button type="submit" class="btn-save">
+                    <i class="bi bi-floppy-fill"></i> حفظ التعديلات
+                </button>
+                <a asp-action="Index" class="btn-cancel">إلغاء</a>
+            </div>
+        </form>
+        <div class="preloader">
+            <span>LOADING</span>
+            <span class="loader"></span>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Highlight changed fields
+        document.querySelectorAll('.trackable').forEach(el => {
+            const orig = el.value;
+            el.addEventListener('input', () => {
+                el.classList.toggle('changed', el.value !== orig);
+            });
+        });
+
+        function togglePass() {
+            const inp = document.getElementById('passInput');
+            const eye = document.getElementById('passEye');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            eye.className = inp.type === 'password' ? 'bi bi-eye-fill' : 'bi bi-eye-slash-fill';
+        }
+    </script>
 }

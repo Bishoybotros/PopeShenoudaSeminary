@@ -1,9 +1,359 @@
-﻿<form method="post" enctype="multipart/form-data">
+@{
+    ViewData["Title"] = "رفع كتاب";
+}
 
-    <input type="text" name="title" placeholder="Book name" />
+@section Styles {
+<style>
+    :root {
+        --navy: #1a3a5c; --gold: #b8933a;
+        --surface: #f0f2f5; --card: #fff;
+        --border: #e4e7ec; --radius: 12px;
+        --shadow: 0 2px 12px rgba(26,58,92,.08);
+    }
+    .adm-page-header {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 1.25rem 1.5rem;
+        display: flex; align-items: center; gap: .75rem;
+    }
+    .adm-page-title { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin: 0; }
+    .adm-page-sub   { font-size: .8rem; color: #6b7280; margin-top: .15rem; }
+    .back-btn {
+        display: inline-flex; align-items: center; gap: .4rem;
+        color: #6b7280; text-decoration: none; font-size: .83rem;
+        padding: .4rem .75rem; border-radius: 8px;
+        border: 1px solid var(--border); background: var(--surface);
+        transition: all .15s;
+    }
+    .back-btn:hover { background: var(--border); color: var(--navy); }
 
-    <input type="file" name="file" />
+    .adm-content { padding: 1.5rem; }
 
-    <button type="submit">Upload</button>
+    .form-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        max-width: 560px;
+        overflow: hidden;
+    }
+    .form-card-header {
+        padding: 1.1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; gap: .6rem;
+    }
+    .form-card-icon {
+        width: 34px; height: 34px; border-radius: 8px;
+        background: rgba(184,147,58,.12);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--gold); font-size: 1rem;
+    }
+    .form-card-header h5 { font-size: .95rem; font-weight: 700; color: var(--navy); margin: 0; }
+    .form-card-body { padding: 1.5rem; }
 
-</form>
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label {
+        display: block;
+        font-size: .8rem; font-weight: 700;
+        color: var(--navy); margin-bottom: .45rem;
+    }
+    .form-label span { color: #dc2626; }
+
+    .form-control-adm {
+        display: block; width: 100%;
+        padding: .6rem .9rem;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-size: .88rem; color: #1e2535;
+        background: var(--surface);
+        transition: border .2s, box-shadow .2s;
+        outline: none;
+    }
+    .form-control-adm:focus {
+        border-color: var(--navy);
+        box-shadow: 0 0 0 3px rgba(26,58,92,.1);
+        background: #fff;
+    }
+
+    /* Drop zone */
+    .drop-zone {
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        padding: 2rem 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color .2s, background .2s;
+        position: relative;
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+        border-color: var(--navy);
+        background: rgba(26,58,92,.04);
+    }
+    .drop-zone input[type="file"] {
+        position: absolute; inset: 0;
+        opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .drop-icon {
+        font-size: 2.2rem; color: var(--gold); margin-bottom: .6rem;
+        display: block;
+    }
+    .drop-title {
+        font-size: .9rem; font-weight: 600; color: var(--navy);
+        margin-bottom: .25rem;
+    }
+    .drop-sub { font-size: .78rem; color: #6b7280; }
+    .drop-sub strong { color: var(--navy); }
+
+    /* File preview */
+    .file-preview {
+        display: none;
+        margin-top: .85rem;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: .75rem 1rem;
+        align-items: center;
+        gap: .75rem;
+    }
+    .file-preview.show { display: flex; }
+    .file-preview-icon {
+        width: 38px; height: 44px;
+        background: rgba(220,38,38,.08);
+        border-radius: 6px;
+        display: flex; align-items: center; justify-content: center;
+        color: #dc2626; font-size: 1.3rem; flex-shrink: 0;
+    }
+    .file-preview-name { font-size: .85rem; font-weight: 600; color: #1e2535; }
+    .file-preview-size { font-size: .75rem; color: #6b7280; margin-top: .1rem; }
+    .file-remove {
+        margin-right: auto; background: none; border: none;
+        color: #9ca3af; cursor: pointer; padding: .25rem;
+        border-radius: 6px; transition: color .15s;
+    }
+    .file-remove:hover { color: #dc2626; }
+
+    /* Tips box */
+    .tips-box {
+        margin-top: 1.25rem;
+        background: rgba(26,58,92,.04);
+        border: 1px solid rgba(26,58,92,.1);
+        border-radius: 9px;
+        padding: .85rem 1rem;
+    }
+    .tips-box p { font-size: .78rem; color: #4b5563; margin: 0; line-height: 1.7; }
+    .tips-box i { color: var(--gold); margin-left: .3rem; }
+
+    .form-card-footer {
+        padding: 1.1rem 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex; align-items: center; gap: .75rem;
+    }
+    .btn-save {
+        display: inline-flex; align-items: center; gap: .4rem;
+        background: var(--navy); color: #fff;
+        padding: .58rem 1.4rem; border-radius: 9px;
+        font-size: .875rem; font-weight: 600;
+        border: none; cursor: pointer; transition: background .2s;
+    }
+    .btn-save:hover { background: #234d7a; }
+    .btn-save:disabled { background: #9ca3af; cursor: not-allowed; }
+    .btn-cancel {
+        display: inline-flex; align-items: center; gap: .4rem;
+        color: #6b7280; text-decoration: none; font-size: .875rem;
+        padding: .58rem 1.1rem; border-radius: 9px;
+        border: 1px solid var(--border); background: transparent;
+        transition: all .15s;
+    }
+    .btn-cancel:hover { background: var(--surface); color: var(--navy); }
+
+    /* Upload progress */
+    .upload-progress {
+        display: none;
+        margin-top: .85rem;
+    }
+    .upload-progress.show { display: block; }
+    .upload-progress-bar-bg {
+        height: 6px; background: var(--border);
+        border-radius: 99px; overflow: hidden;
+    }
+    .upload-progress-fill {
+        height: 100%; width: 0%; background: var(--navy);
+        border-radius: 99px;
+        transition: width .3s;
+        animation: progress-pulse 1.5s infinite;
+    }
+   
+    .upload-progress-lbl {
+        font-size: .75rem; color: #6b7280;
+        margin-top: .35rem;
+    }
+
+    .validation-msg { font-size:.76rem; color:#dc2626; margin-top:.3rem; display:none; }
+</style>
+}
+
+<div class="adm-page-header">
+    <a asp-controller="Books" asp-action="Index" class="back-btn">
+        <i class="bi bi-arrow-right"></i> رجوع
+    </a>
+    <div>
+        <h1 class="adm-page-title">رفع كتاب جديد</h1>
+        <div class="adm-page-sub">إضافة ملف PDF وجعله متاحاً للطلاب</div>
+    </div>
+</div>
+
+<div class="adm-content">
+    <div class="form-card">
+
+        <div class="form-card-header">
+            <div class="form-card-icon"><i class="bi bi-book-fill"></i></div>
+            <h5>بيانات الكتاب</h5>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="uploadForm">
+            <div class="form-card-body">
+
+                <!-- Title -->
+                <div class="form-group">
+                    <label class="form-label">اسم الكتاب <span>*</span></label>
+                    <input type="text" name="title" id="titleInput"
+                           placeholder="مثال: مقدمة في اللاهوت العقيدي"
+                           class="form-control-adm" required />
+                    <div class="validation-msg" id="titleErr">يرجى إدخال اسم الكتاب</div>
+                </div>
+
+                <!-- File drop zone -->
+                <div class="form-group">
+                    <label class="form-label">ملف PDF <span>*</span></label>
+                    <div class="drop-zone" id="dropZone">
+                        <input type="file" name="file" id="fileInput"
+                               accept=".pdf,application/pdf" required />
+                        <i class="bi bi-cloud-arrow-up-fill drop-icon"></i>
+                        <div class="drop-title">اسحب الملف هنا أو انقر للاختيار</div>
+                        <div class="drop-sub">يُقبل <strong>PDF</strong> فقط · الحجم الأقصى <strong>50 MB</strong></div>
+                    </div>
+                    <div class="validation-msg" id="fileErr">يرجى اختيار ملف PDF</div>
+
+                    <!-- File preview -->
+                    <div class="file-preview" id="filePreview">
+                        <div class="file-preview-icon">
+                            <i class="bi bi-file-earmark-pdf-fill"></i>
+                        </div>
+                        <div>
+                            <div class="file-preview-name" id="fileName"></div>
+                            <div class="file-preview-size" id="fileSize"></div>
+                        </div>
+                        <button type="button" class="file-remove" id="removeFile" title="إزالة الملف">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Upload progress (cosmetic — real progress needs XHR) -->
+                    <div class="upload-progress" id="uploadProgress">
+                        <div class="upload-progress-bar-bg">
+                            <div class="upload-progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="upload-progress-lbl">جارٍ الرفع...</div>
+                    </div>
+                </div>
+
+                <!-- Tips -->
+                <div class="tips-box">
+                    <p>
+                        <i class="bi bi-info-circle-fill"></i>
+                        تأكد أن الملف بصيغة PDF وحجمه لا يتجاوز 50 MB.
+                        سيكون الكتاب متاحاً فور الحفظ لجميع الطلاب المسجّلين.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="form-card-footer">
+                <button type="submit" class="btn-save" id="submitBtn">
+                    <i class="bi bi-cloud-upload-fill"></i> رفع الكتاب
+                </button>
+                <a asp-controller="Books" asp-action="Index" class="btn-cancel">إلغاء</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const fileInput   = document.getElementById('fileInput');
+    const dropZone    = document.getElementById('dropZone');
+    const filePreview = document.getElementById('filePreview');
+    const fileName    = document.getElementById('fileName');
+    const fileSize    = document.getElementById('fileSize');
+    const removeBtn   = document.getElementById('removeFile');
+    const submitBtn   = document.getElementById('submitBtn');
+    const progress    = document.getElementById('uploadProgress');
+    const progressFill= document.getElementById('progressFill');
+
+    function formatBytes(b) {
+        if (b < 1024) return b + ' B';
+        if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+        return (b/1048576).toFixed(1) + ' MB';
+    }
+
+    function showFile(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = formatBytes(file.size);
+        filePreview.classList.add('show');
+        dropZone.style.borderColor = 'var(--navy)';
+    }
+
+    function clearFile() {
+        fileInput.value = '';
+        filePreview.classList.remove('show');
+        dropZone.style.borderColor = '';
+        progress.classList.remove('show');
+        progressFill.style.width = '0%';
+    }
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files[0]) showFile(fileInput.files[0]);
+    });
+
+    removeBtn.addEventListener('click', clearFile);
+
+    // Drag-and-drop styling
+    dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop',      e => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const f = e.dataTransfer.files[0];
+        if (f && f.type === 'application/pdf') {
+            // Transfer to real input via DataTransfer
+            const dt = new DataTransfer();
+            dt.items.add(f);
+            fileInput.files = dt.files;
+            showFile(f);
+        }
+    });
+
+    // Validation + cosmetic progress on submit
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        const titleOk = document.getElementById('titleInput').value.trim() !== '';
+        const fileOk  = fileInput.files.length > 0;
+
+        document.getElementById('titleErr').style.display = titleOk ? 'none' : 'block';
+        document.getElementById('fileErr').style.display  = fileOk  ? 'none' : 'block';
+
+        if (!titleOk || !fileOk) { e.preventDefault(); return; }
+
+        // Cosmetic upload progress animation
+        submitBtn.disabled = true;
+        progress.classList.add('show');
+        let w = 0;
+        const iv = setInterval(() => {
+            w = Math.min(w + Math.random() * 18, 90);
+            progressFill.style.width = w + '%';
+            if (w >= 90) clearInterval(iv);
+        }, 200);
+    });
+</script>
+}

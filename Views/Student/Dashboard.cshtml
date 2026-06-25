@@ -33,18 +33,15 @@
 
         /* ── HERO BANNER ── */
         .dash-hero {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient( 135deg, #6F4E37 0%, #A67B5B 100% );
             padding: 2.5rem 0 2rem;
             margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
             .dash-hero::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background-image: repeating-linear-gradient( 45deg, transparent, transparent 28px, rgba(255,255,255,.03) 28px, rgba(255,255,255,.03) 30px );
+                display: none;
             }
 
             .dash-hero .container {
@@ -401,12 +398,23 @@
         <div class="container">
             <div class="d-flex align-items-center gap-4 flex-wrap">
                 <div class="student-avatar">
-                   
+                    @(string.IsNullOrEmpty(Model.Student.FullName)
+                                        ? "?"
+                                        : Model.Student.FullName.Substring(0, 1))
                 </div>
                 <div class="student-info">
-                    <p class="section-label mb-1">لوحة الطالب</p>
-                    <h2>@Model?.users?.FirstOrDefault()?.FullName</h2>
-                    <span class="badge-year">@Model?.Grades?.FirstOrDefault()?.Year</span>
+                    <h2>الاكليريكي ، @Model.Student.FullName</h2>
+                    <span class="badge-year">
+                        @(Model.Student.GradeId switch
+                        {
+                            1 => "الفرقة الأول",
+                            2 => "الفرقة الثاني",
+                            3 => "الفرقة الثالث",
+                            4 => "الفرقة الرابع",
+                            
+                            5=> "خريخ"
+                        })
+                    </span>
                 </div>
                 <div class="d-flex gap-4 me-auto flex-wrap">
                     <div class="hero-divider d-none d-md-block"></div>

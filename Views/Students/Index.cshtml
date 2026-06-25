@@ -1,71 +1,753 @@
 ﻿@model IEnumerable<PopeShenoudaSeminary.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "إدارة الطلاب";
 }
 
-<h1>Index</h1>
+@section Styles {
+    <style>
+        :root {
+            /* Coffee Theme */
+            --navy: #5C4033; /* Espresso */
+            --gold: #C69C6D; /* Caramel */
+            --surface: #F7F1EA; /* Latte */
+            --card: #FFFDF9; /* Vanilla */
+            --border: #E6D8C9; /* Cream */
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NationalId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PasswordHash)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Grade)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Code)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NationalId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PasswordHash)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Grade.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+            --radius: 12px;
+            --shadow: 0 4px 16px rgba(92,64,51,.12);
+        }
+
+        /* ── PAGE HEADER ── */
+        .adm-page-header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .adm-page-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        .adm-page-sub {
+            font-size: .8rem;
+            color: #6b7280;
+            margin-top: .15rem;
+        }
+
+        .btn-adm-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: var(--navy);
+            color: #fff;
+            padding: .5rem 1.1rem;
+            border-radius: 9px;
+            font-size: .83rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .btn-adm-primary:hover {
+                background: #234d7a;
+                color: #fff;
+            }
+
+        .adm-content {
+            padding: 1.5rem;
+        }
+
+        /* ── SUMMARY STRIP ── */
+        .summary-strip {
+            display: flex;
+            gap: .85rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .ss-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: .85rem 1.25rem;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .ss-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .ss-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--navy);
+            line-height: 1;
+        }
+
+        .ss-lbl {
+            font-size: .75rem;
+            color: #6b7280;
+            margin-top: .15rem;
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: .9rem 1.25rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            gap: .75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+            .filter-bar input, .filter-bar select {
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: .45rem .85rem;
+                font-size: .83rem;
+                color: #1e2535;
+                background: var(--surface);
+                outline: none;
+                transition: border .2s;
+            }
+
+                .filter-bar input:focus, .filter-bar select:focus {
+                    border-color: var(--navy);
+                }
+
+            .filter-bar input {
+                flex: 1;
+                min-width: 200px;
+            }
+
+        /* ── TABLE CARD ── */
+        .table-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .adm-table {
+            margin: 0;
+        }
+
+            .adm-table thead th {
+                background: rgba(26,58,92,.04);
+                color: var(--navy);
+                font-size: .72rem;
+                font-weight: 700;
+                letter-spacing: .06em;
+                text-transform: uppercase;
+                border-bottom: 2px solid var(--border);
+                padding: .85rem 1.1rem;
+                white-space: nowrap;
+            }
+
+            .adm-table tbody td {
+                padding: .85rem 1.1rem;
+                vertical-align: middle;
+                border-bottom: 1px solid var(--border);
+                font-size: .875rem;
+                color: #374151;
+            }
+
+            .adm-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .adm-table tbody tr:hover {
+                background: rgba(26,58,92,.025);
+            }
+
+        /* ── STUDENT CELL ── */
+        .student-cell {
+            display: flex;
+            align-items: center;
+            gap: .65rem;
+        }
+
+        .stu-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--navy), #234d7a);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .stu-name {
+            font-weight: 600;
+            color: #1e2535;
+            font-size: .9rem;
+        }
+
+        .stu-code {
+            font-size: .74rem;
+            color: #6b7280;
+            margin-top: .05rem;
+        }
+
+        /* ── BADGES ── */
+        .role-badge {
+            display: inline-block;
+            padding: .25rem .7rem;
+            border-radius: 20px;
+            font-size: .74rem;
+            font-weight: 600;
+        }
+
+        .role-admin {
+            background: rgba(139,92,246,.12);
+            color: #6d28d9;
+        }
+
+        .role-student {
+            background: rgba(26,58,92,.1);
+            color: var(--navy);
+        }
+
+        .grade-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            padding: .25rem .7rem;
+            border-radius: 20px;
+            background: rgba(184,147,58,.12);
+            color: #92400e;
+            font-size: .74rem;
+            font-weight: 600;
+        }
+
+        /* ── ACTION BUTTONS ── */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: .82rem;
+            transition: background .15s;
+            flex-shrink: 0;
+        }
+
+        .action-edit {
+            background: rgba(37,99,235,.1);
+            color: #2563eb;
+        }
+
+        .action-details {
+            background: rgba(26,58,92,.08);
+            color: var(--navy);
+        }
+
+        .action-delete {
+            background: rgba(220,38,38,.1);
+            color: #dc2626;
+        }
+
+        .action-edit:hover {
+            background: rgba(37,99,235,.2);
+            color: #1d4ed8;
+        }
+
+        .action-details:hover {
+            background: rgba(26,58,92,.16);
+            color: var(--navy);
+        }
+
+        .action-delete:hover {
+            background: rgba(220,38,38,.2);
+            color: #b91c1c;
+        }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center;
+            padding: 3.5rem 1rem;
+        }
+
+            .empty-state i {
+                font-size: 2.5rem;
+                color: #d1d5db;
+                display: block;
+                margin-bottom: .75rem;
+            }
+
+            .empty-state p {
+                color: #6b7280;
+                font-size: .9rem;
+            }
+
+        /* ── PAGINATION STUB ── */
+        .table-footer {
+            padding: .85rem 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: .78rem;
+            color: #6b7280;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+
+
+        .btn-adm-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: #6b7280;
+            color: #fff;
+            padding: .5rem 1.1rem;
+            border-radius: 9px;
+            font-size: .83rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            transition: background .2s;
+        }
+
+            .btn-adm-secondary:hover {
+                background: #4b5563;
+                color: #fff;
+            }
+
+
+        /* ===== Coffee Theme Overrides ===== */
+
+        body {
+            background: #F5EFE6;
+        }
+
+        .btn-adm-primary {
+            background: #6F4E37;
+        }
+
+            .btn-adm-primary:hover {
+                background: #4B3621;
+            }
+
+        .btn-adm-secondary {
+            background: #A67B5B;
+        }
+
+            .btn-adm-secondary:hover {
+                background: #8B6B4F;
+            }
+
+        .adm-table thead th {
+            background: rgba(111,78,55,.08);
+        }
+
+        .adm-table tbody tr:hover {
+            background: rgba(198,156,109,.08);
+        }
+
+        .stu-avatar {
+            background: linear-gradient( 135deg, #6F4E37, #A67B5B );
+        }
+
+        .role-admin {
+            background: rgba(111,78,55,.15);
+            color: #5C4033;
+        }
+
+        .role-student {
+            background: rgba(198,156,109,.15);
+            color: #8B5E34;
+        }
+
+        .grade-badge {
+            background: rgba(198,156,109,.18);
+            color: #8B5E34;
+        }
+
+        .action-edit {
+            background: rgba(166,123,91,.15);
+            color: #6F4E37;
+        }
+
+            .action-edit:hover {
+                background: rgba(166,123,91,.25);
+                color: #4B3621;
+            }
+
+        .action-details {
+            background: rgba(198,156,109,.15);
+            color: #8B5E34;
+        }
+
+            .action-details:hover {
+                background: rgba(198,156,109,.25);
+                color: #6F4E37;
+            }
+
+        .ss-lbl,
+        .adm-page-sub,
+        .stu-code,
+        .table-footer {
+            color: #8B7355;
+        }
+
+        .pagination-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .pagination-wrapper button {
+                min-width: 40px;
+            }
+
+        #pageInfo {
+            color: var(--navy);
+            font-size: .85rem;
+        }
+    </style>
 }
-    </tbody>
-</table>
+
+<div class="adm-page-header">
+    <div>
+        <h1 class="adm-page-title">إدارة الطلاب</h1>
+        <div class="adm-page-sub">@Model.Count() طالب مسجّل في النظام</div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a asp-controller="Admin" asp-action="Dashboard" class="btn-adm-secondary">
+            <i class="bi bi-house-door-fill"></i>
+            لوحة التحكم
+        </a>
+
+        <a asp-action="Create" class="btn-adm-primary">
+            <i class="bi bi-person-plus-fill"></i>
+            إضافة طالب جديد
+        </a>
+    </div>
+</div>
+<div class="adm-content">
+
+    <!-- Summary strip -->
+    <div class="summary-strip">
+        <div class="ss-box">
+            <div class="ss-icon" style="background:rgba(26,58,92,.08);color:var(--navy)">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <div class="ss-val">@Model.Count()</div>
+                <div class="ss-lbl">إجمالي الطلاب</div>
+            </div>
+        </div>
+        <div class="ss-box">
+            <div class="ss-icon" style="background:rgba(22,128,60,.1);color:#16803c">
+                <i class="bi bi-person-check-fill"></i>
+            </div>
+            <div>
+                <div class="ss-val" style="color:#16803c">@Model.Count(u => u.Role != null && u.Role.Name == "Student")</div>
+                <div class="ss-lbl">طلاب نشطون</div>
+            </div>
+        </div>
+        <div class="ss-box">
+            <div class="ss-icon" style="background:rgba(139,92,246,.1);color:#6d28d9">
+                <i class="bi bi-shield-fill"></i>
+            </div>
+            <div>
+                <div class="ss-val" style="color:#6d28d9">@Model.Count(u => u.Role != null && u.Role.Name == "Admin")</div>
+                <div class="ss-lbl">مشرفون</div>
+            </div>
+        </div>
+        <div class="ss-box">
+            <div class="ss-icon" style="background:rgba(184,147,58,.12);color:#92400e">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div>
+                <div class="ss-val" style="color:#92400e">@Model.Select(u => u.GradeId).Distinct().Count()</div>
+                <div class="ss-lbl">سنوات دراسية</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+        <i class="bi bi-search" style="color:#9ca3af"></i>
+        <input type="text" id="searchInput" placeholder="بحث بالاسم أو الكود أو البريد...">
+        <select id="filterGrade">
+            <option value="">كل السنوات</option>
+            @foreach (var grade in Model.Where(u => u.Grade != null).Select(u => u.Grade).DistinctBy(g => g.Id))
+            {
+                <option value="@grade.Id">@grade.Name</option>
+            }
+        </select>
+        <select id="filterRole">
+            <option value="">كل الأدوار</option>
+            @foreach (var role in Model.Where(u => u.Role != null).Select(u => u.Role).DistinctBy(r => r.Id))
+            {
+                <option value="@role.Id">@role.Name</option>
+            }
+        </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <table class="table adm-table" id="studentsTable">
+            <thead>
+                <tr>
+                    <th style="width:42px">#</th>
+                    <th>الطالب</th>
+                    <th>الرقم القومي</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>السنة الدراسية</th>
+                    <th>الدور</th>
+                    <th style="width:110px">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="bi bi-people"></i>
+                                <p>لا يوجد طلاب مسجّلون بعد</p>
+                                <a asp-action="Create" class="btn-adm-primary" style="margin-top:.5rem">
+                                    <i class="bi bi-person-plus-fill"></i> أضف أول طالب
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @{
+                    int idx = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    var init = item.FullName?.Length > 0 ? item.FullName[0].ToString() : "؟";
+                    var roleClass = item.Role?.Name == "Admin" ? "role-admin" : "role-student";
+                    var roleName = item.Role?.Name == "Admin" ? "مشرف" : "طالب";
+                    <tr data-name="@item.FullName?.ToLower()"
+                        data-code="@item.Code?.ToLower()"
+                        data-email="@item.Email?.ToLower()"
+                        data-grade="@item.GradeId"
+                        data-role="@item.RoleId">
+                        <td style="color:#9ca3af;font-size:.78rem">@(idx++)</td>
+                        <td>
+                            <div class="student-cell">
+                                <div class="stu-avatar">@init</div>
+                                <div>
+                                    <div class="stu-name">@item.FullName</div>
+                                    <div class="stu-code">كود: @item.Code</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-family:monospace;font-size:.83rem;color:#4b5563">@item.NationalId</td>
+                        <td style="font-size:.83rem">@item.Email</td>
+                        <td>
+                            @if (item.Grade != null)
+                            {
+                                <span class="grade-badge">
+                                    <i class="bi bi-mortarboard-fill" style="font-size:.65rem"></i>
+                                    @item.Grade.Name
+                                </span>
+                            }
+                        </td>
+                        <td><span class="role-badge @roleClass">@roleName</span></td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                   class="action-btn action-edit" title="تعديل">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   class="action-btn action-details" title="التفاصيل">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   class="action-btn action-delete" title="حذف">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="table-footer">
+            <span id="countLabel">عرض @Model.Count() من @Model.Count()</span>
+
+            <div class="pagination-wrapper">
+                <button id="prevPage" class="btn-adm-secondary">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+                <span id="pageInfo" style="padding:0 10px;font-weight:600;"></span>
+
+                <button id="nextPage" class="btn-adm-secondary">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            </div>
+            <div class="preloader">
+                <span>LOADING</span>
+                <span class="loader"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+@*     <script>
+        const search      = document.getElementById('searchInput');
+        const filterGrade = document.getElementById('filterGrade');
+        const filterRole  = document.getElementById('filterRole');
+        const rows        = [...document.querySelectorAll('#studentsTable tbody tr[data-name]')];
+        const countLabel  = document.getElementById('countLabel');
+
+        function applyFilter() {
+            const q     = search.value.toLowerCase().trim();
+            const grade = filterGrade.value;
+            const role  = filterRole.value;
+            let visible = 0;
+
+            rows.forEach(r => {
+                const matchQ = !q || r.dataset.name.includes(q) ||
+                                   r.dataset.code.includes(q) ||
+                                   r.dataset.email.includes(q);
+                const matchG = !grade || r.dataset.grade === grade;
+                const matchR = !role  || r.dataset.role  === role;
+                const show   = matchQ && matchG && matchR;
+                r.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+            countLabel.textContent = `عرض ${visible} من ${rows.length}`;
+        }
+
+        search.addEventListener('input', applyFilter);
+        filterGrade.addEventListener('change', applyFilter);
+        filterRole.addEventListener('change', applyFilter);
+    </script>
+ *@    <script>
+        const search = document.getElementById('searchInput');
+        const filterGrade = document.getElementById('filterGrade');
+        const filterRole = document.getElementById('filterRole');
+
+        const rows = [...document.querySelectorAll('#studentsTable tbody tr[data-name]')];
+
+        const countLabel = document.getElementById('countLabel');
+        const pageInfo = document.getElementById('pageInfo');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+
+        const pageSize = 10;
+
+        let currentPage = 1;
+        let filteredRows = [...rows];
+
+        function renderPage() {
+
+            rows.forEach(r => r.style.display = 'none');
+
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+
+            filteredRows.slice(start, end).forEach(r => {
+                r.style.display = '';
+            });
+
+            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
+
+            pageInfo.textContent = `صفحة ${currentPage} من ${totalPages}`;
+
+            countLabel.textContent =
+                `عرض ${filteredRows.length} من ${rows.length}`;
+
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+        }
+
+        function applyFilter() {
+
+            const q = search.value.toLowerCase().trim();
+            const grade = filterGrade.value;
+            const role = filterRole.value;
+
+            filteredRows = rows.filter(r => {
+
+                const matchQ =
+                    !q ||
+                    r.dataset.name.includes(q) ||
+                    r.dataset.code.includes(q) ||
+                    r.dataset.email.includes(q);
+
+                const matchG =
+                    !grade ||
+                    r.dataset.grade === grade;
+
+                const matchR =
+                    !role ||
+                    r.dataset.role === role;
+
+                return matchQ && matchG && matchR;
+            });
+
+            currentPage = 1;
+
+            renderPage();
+        }
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredRows.length / pageSize);
+
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        });
+
+        search.addEventListener('input', applyFilter);
+        filterGrade.addEventListener('change', applyFilter);
+        filterRole.addEventListener('change', applyFilter);
+
+        applyFilter();
+    </script>
+}

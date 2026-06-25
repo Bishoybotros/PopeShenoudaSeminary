@@ -1,24 +1,268 @@
-﻿<form asp-action="AddStudentGrade" method="post">
+@{
+    ViewData["Title"] = "إضافة درجة";
+}
 
-    <label>Student</label>
-    <select name="StudentId">
-        @foreach (var stu in ViewBag.Students)
-        {
-            <option value="@stu.Id">@stu.FullName</option>
+@section Styles {
+<style>
+    :root {
+        --navy: #1a3a5c; --gold: #b8933a;
+        --surface: #f0f2f5; --card: #fff;
+        --border: #e4e7ec; --radius: 12px;
+        --shadow: 0 2px 12px rgba(26,58,92,.08);
+    }
+    .adm-page-header {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 1.25rem 1.5rem;
+        display: flex; align-items: center; gap: .75rem;
+    }
+    .adm-page-title { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin: 0; }
+    .adm-page-sub   { font-size: .8rem; color: #6b7280; margin-top: .15rem; }
+    .back-btn {
+        display: inline-flex; align-items: center; gap: .4rem;
+        color: #6b7280; text-decoration: none; font-size: .83rem;
+        padding: .4rem .75rem; border-radius: 8px;
+        border: 1px solid var(--border); background: var(--surface);
+        transition: all .15s;
+    }
+    .back-btn:hover { background: var(--border); color: var(--navy); }
+
+    .adm-content { padding: 1.5rem; }
+
+    .form-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        max-width: 540px;
+        overflow: hidden;
+    }
+    .form-card-header {
+        padding: 1.1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; gap: .6rem;
+    }
+    .form-card-icon {
+        width: 34px; height: 34px; border-radius: 8px;
+        background: rgba(26,58,92,.08);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--navy); font-size: 1rem;
+    }
+    .form-card-header h5 { font-size: .95rem; font-weight: 700; color: var(--navy); margin: 0; }
+    .form-card-body { padding: 1.5rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label {
+        display: block;
+        font-size: .8rem; font-weight: 700;
+        color: var(--navy); margin-bottom: .45rem;
+        letter-spacing: .02em;
+    }
+    .form-label span { color: #dc2626; margin-right: .2rem; }
+
+    .form-control-adm {
+        display: block; width: 100%;
+        padding: .6rem .9rem;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-size: .88rem; color: #1e2535;
+        background: var(--surface);
+        transition: border .2s, box-shadow .2s;
+        outline: none;
+        appearance: none;
+    }
+    .form-control-adm:focus {
+        border-color: var(--navy);
+        box-shadow: 0 0 0 3px rgba(26,58,92,.1);
+        background: #fff;
+    }
+    select.form-control-adm {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'%3E%3Cpath fill='%236b7280' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: left .75rem center;
+        padding-left: 2rem;
+    }
+
+    /* Score preview widget */
+    .score-preview {
+        margin-top: .6rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: .75rem 1rem;
+        display: flex; align-items: center; gap: .85rem;
+    }
+    .score-bar-bg {
+        flex: 1; height: 8px; background: var(--border);
+        border-radius: 99px; overflow: hidden;
+    }
+    .score-bar-fill { height: 100%; border-radius: 99px; transition: width .3s, background .3s; }
+    .score-pill {
+        font-size: .78rem; font-weight: 700;
+        padding: .25rem .7rem; border-radius: 20px;
+        transition: all .2s; white-space: nowrap;
+    }
+
+    .form-card-footer {
+        padding: 1.1rem 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex; align-items: center; gap: .75rem;
+    }
+    .btn-save {
+        display: inline-flex; align-items: center; gap: .4rem;
+        background: var(--navy); color: #fff;
+        padding: .58rem 1.4rem; border-radius: 9px;
+        font-size: .875rem; font-weight: 600;
+        border: none; cursor: pointer;
+        transition: background .2s;
+    }
+    .btn-save:hover { background: #234d7a; }
+    .btn-cancel {
+        display: inline-flex; align-items: center; gap: .4rem;
+        color: #6b7280; text-decoration: none; font-size: .875rem;
+        padding: .58rem 1.1rem; border-radius: 9px;
+        border: 1px solid var(--border); background: transparent;
+        transition: all .15s;
+    }
+    .btn-cancel:hover { background: var(--surface); color: var(--navy); }
+
+    .validation-msg {
+        font-size: .76rem; color: #dc2626;
+        margin-top: .3rem; display: none;
+    }
+</style>
+}
+
+<div class="adm-page-header">
+    <a asp-controller="Grades" asp-action="Index" class="back-btn">
+        <i class="bi bi-arrow-right"></i> رجوع
+    </a>
+    <div>
+        <h1 class="adm-page-title">إضافة درجة طالب</h1>
+        <div class="adm-page-sub">تسجيل درجة جديدة لطالب في مادة معينة</div>
+    </div>
+</div>
+
+<div class="adm-content">
+    <div class="form-card">
+
+        <div class="form-card-header">
+            <div class="form-card-icon"><i class="bi bi-plus-circle-fill"></i></div>
+            <h5>بيانات الدرجة</h5>
+        </div>
+
+        <form asp-action="AddStudentGrade" method="post" id="gradeForm">
+            <div class="form-card-body">
+
+                <!-- Student -->
+                <div class="form-group">
+                    <label class="form-label">
+                        الطالب <span>*</span>
+                    </label>
+                    <select name="StudentId" class="form-control-adm" required>
+                        <option value="">— اختر الطالب —</option>
+                        @foreach (var stu in ViewBag.Students)
+                        {
+                            <option value="@stu.Id">@stu.FullName</option>
+                        }
+                    </select>
+                    <div class="validation-msg" id="stuErr">يرجى اختيار الطالب</div>
+                </div>
+
+                <!-- Subject -->
+                <div class="form-group">
+                    <label class="form-label">
+                        المادة الدراسية <span>*</span>
+                    </label>
+                    <select name="SubjectId" class="form-control-adm" required>
+                        <option value="">— اختر المادة —</option>
+                        @foreach (var sub in ViewBag.Subjects)
+                        {
+                            <option value="@sub.Id">@sub.Name</option>
+                        }
+                    </select>
+                    <div class="validation-msg" id="subErr">يرجى اختيار المادة</div>
+                </div>
+
+                <!-- Score -->
+                <div class="form-group">
+                    <label class="form-label">
+                        الدرجة <span>*</span>
+                        <span style="font-weight:400;color:#6b7280;font-size:.75rem">(0 – 100)</span>
+                    </label>
+                    <input type="number" name="Score" id="scoreInput"
+                           min="0" max="100" placeholder="أدخل الدرجة"
+                           class="form-control-adm" required />
+                    <div class="validation-msg" id="scoreErr">يرجى إدخال درجة صحيحة بين 0 و 100</div>
+
+                    <!-- Live preview -->
+                    <div class="score-preview" id="scorePreview" style="display:none">
+                        <div class="score-bar-bg">
+                            <div class="score-bar-fill" id="scoreBarFill"></div>
+                        </div>
+                        <span class="score-pill" id="scorePill"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-card-footer">
+                <button type="submit" class="btn-save">
+                    <i class="bi bi-floppy-fill"></i> حفظ الدرجة
+                </button>
+                <a asp-controller="Grades" asp-action="Index" class="btn-cancel">
+                    إلغاء
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const scoreInput   = document.getElementById('scoreInput');
+    const scorePreview = document.getElementById('scorePreview');
+    const barFill      = document.getElementById('scoreBarFill');
+    const pill         = document.getElementById('scorePill');
+
+    function getGrade(s) {
+        if (s >= 85) return { label: 'ممتاز',    color: '#16803c', bg: 'rgba(22,128,60,.12)' };
+        if (s >= 75) return { label: 'جيد جداً', color: '#2563eb', bg: 'rgba(37,99,235,.1)' };
+        if (s >= 60) return { label: 'جيد',       color: '#92400e', bg: 'rgba(184,147,58,.15)' };
+        if (s >= 50) return { label: 'مقبول',     color: '#7c2d12', bg: 'rgba(124,45,18,.1)' };
+        return            { label: 'راسب',        color: '#dc2626', bg: 'rgba(220,38,38,.1)' };
+    }
+
+    scoreInput.addEventListener('input', () => {
+        const val = parseInt(scoreInput.value);
+        if (isNaN(val) || scoreInput.value === '') {
+            scorePreview.style.display = 'none'; return;
         }
-    </select>
+        const clamped = Math.min(Math.max(val, 0), 100);
+        const g = getGrade(clamped);
+        barFill.style.width      = clamped + '%';
+        barFill.style.background = g.color;
+        pill.textContent         = g.label;
+        pill.style.color         = g.color;
+        pill.style.background    = g.bg;
+        scorePreview.style.display = 'flex';
+    });
 
-    <label>Subject</label>
-    <select name="SubjectId">
-        @foreach (var sub in ViewBag.Subjects)
-        {
-            <option value="@sub.Id">@sub.Name</option>
+    // Basic client-side validation
+    document.getElementById('gradeForm').addEventListener('submit', function(e) {
+        let ok = true;
+        const stuSel   = this.querySelector('[name="StudentId"]');
+        const subSel   = this.querySelector('[name="SubjectId"]');
+        const scoreVal = parseInt(scoreInput.value);
+
+        document.getElementById('stuErr').style.display   = (!stuSel.value)  ? 'block' : 'none';
+        document.getElementById('subErr').style.display   = (!subSel.value)  ? 'block' : 'none';
+        document.getElementById('scoreErr').style.display = (isNaN(scoreVal) || scoreVal < 0 || scoreVal > 100) ? 'block' : 'none';
+
+        if (!stuSel.value || !subSel.value || isNaN(scoreVal) || scoreVal < 0 || scoreVal > 100) {
+            e.preventDefault();
         }
-    </select>
-
-    <label>Score</label>
-    <input type="number" name="Score" />
-
-    <button type="submit">Save</button>
-
-</form>
+    });
+</script>
+}

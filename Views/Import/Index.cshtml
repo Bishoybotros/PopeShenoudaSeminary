@@ -1,25 +1,188 @@
 ﻿@{
-    ViewData["Title"] = "Import Grades";
+    ViewData["Title"] = "استيراد الدرجات";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card mb-4 mt-4">
-            <div class="card-header text-bg-primary">
-                <h3 class="card-title text-white mb-0">Import Grades via Excel</h3>
+<style>
+    :root {
+        --coffee-dark: #6F4E37;
+        --coffee: #8B6B4A;
+        --coffee-light: #B08968;
+        --cream: #F8F5F0;
+        --latte: #EFE6DD;
+        --border: #D8C3A5;
+        --text: #4B3A2F;
+        --shadow: 0 4px 14px rgba(111, 78, 55, .12);
+        --radius: 14px;
+    }
+
+    body {
+        background: var(--cream);
+    }
+
+    .import-wrapper {
+        max-width: 650px;
+        margin: 50px auto;
+    }
+
+    .import-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+
+    .import-header {
+        background: linear-gradient( 135deg, var(--coffee-dark), var(--coffee) );
+        padding: 1.25rem 1.5rem;
+        color: white;
+    }
+
+        .import-header h3 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+    .import-body {
+        padding: 1.5rem;
+    }
+
+    .import-note {
+        background: var(--latte);
+        border-right: 4px solid var(--coffee);
+        padding: 1rem;
+        border-radius: 10px;
+        color: var(--text);
+        font-size: .9rem;
+        margin-bottom: 1.25rem;
+    }
+
+        .import-note strong {
+            color: var(--coffee-dark);
+        }
+
+    .form-control-coffee {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: .75rem;
+        background: var(--cream);
+        transition: all .2s;
+    }
+
+        .form-control-coffee:focus {
+            border-color: var(--coffee);
+            box-shadow: 0 0 0 3px rgba(139,107,74,.15);
+            background: white;
+        }
+
+    .btn-coffee {
+        background: var(--coffee-dark);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: .7rem 1.3rem;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+        .btn-coffee:hover {
+            background: var(--coffee);
+            color: white;
+        }
+
+    .btn-back {
+        background: var(--latte);
+        color: var(--coffee-dark);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: .7rem 1.3rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+        .btn-back:hover {
+            background: #e7dbcf;
+            color: var(--coffee-dark);
+        }
+
+    .btn-group-custom {
+        display: flex;
+        gap: .75rem;
+        margin-top: 1.25rem;
+    }
+
+    .excel-icon {
+        font-size: 3rem;
+        color: #217346;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="import-wrapper">
+
+    <div class="import-card">
+
+        <div class="import-header">
+            <h3>
+                <i class="bi bi-file-earmark-excel-fill"></i>
+                استيراد الدرجات من Excel
+            </h3>
+        </div>
+
+        <div class="import-body">
+
+            <div class="excel-icon">
+                <i class="bi bi-file-earmark-excel-fill"></i>
             </div>
 
-            <div class="card-body">
-                <p class="text-muted">
-                    Please upload an Excel file (.xlsx) containing the grades. <br />
-                    <strong>Format expected:</strong> Column 1 = StudentId, Column 2 = SubjectId, Column 3 = Score.
-                </p>
+            <div class="import-note">
+                يرجى رفع ملف Excel بصيغة <strong>.xlsx</strong>
 
-                <form asp-controller="Import" asp-action="ImportGrades" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" class="form-control" accept=".xlsx" required />
-                    <button type="submit" class="btn btn-primary mt-3">Upload</button>
-                </form>
+                <hr />
+
+                <strong>تنسيق الملف المطلوب:</strong><br />
+                العمود الأول = StudentId<br />
+                العمود الثاني = SubjectId<br />
+                العمود الثالث = Score
+            </div>
+
+            <form asp-controller="Import"
+                  asp-action="ImportGrades"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <input type="file"
+                       name="file"
+                       class="form-control form-control-coffee"
+                       accept=".xlsx"
+                       required />
+
+                <div class="btn-group-custom">
+                    <button type="submit" class="btn btn-coffee">
+                        <i class="bi bi-upload"></i>
+                        رفع الملف
+                    </button>
+
+                    <a asp-controller="Admin"
+                       asp-action="Dashboard"
+                       class="btn-back">
+                        <i class="bi bi-arrow-right"></i>
+                        العودة للوحة التحكم
+                    </a>
+                </div>
+
+            </form>
+            <div class="preloader">
+                <span>LOADING</span>
+                <span class="loader"></span>
             </div>
         </div>
+
     </div>
+
 </div>

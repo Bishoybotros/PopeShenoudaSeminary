@@ -12,18 +12,27 @@
 @section Styles {
     <style>
         :root {
-            --navy: #1a3a5c;
-            --gold: #b8933a;
-            --surface: #f5f6f8;
-            --border: #e4e7ec;
+            --navy: #5C4033; /* Espresso */
+            --navy-light: #6F4E37;
+            --gold: #C69C6D; /* Caramel */
+            --gold-light: #D2B48C;
+            --surface: #F5EFE6; /* Latte */
+            --card: #FFFDF9; /* Vanilla */
+            --border: #E6D8C9; /* Cream */
+            --text-main: #4B3621;
+            --text-muted: #8B7355;
+            --success: #6B8E23;
+            --warning: #A67B5B;
+            --danger: #B22222;
             --radius: 12px;
-            --shadow: 0 2px 12px rgba(26,58,92,.08);
+            --shadow: 0 4px 16px rgba(92,64,51,.12);
         }
 
         .page-header {
-            background: linear-gradient(135deg,#1a3a5c,#234d7a);
+            background: linear-gradient( 135deg, #5C4033 0%, #6F4E37 100% );
             padding: 2rem 0 1.75rem;
             margin-bottom: 2rem;
+            position: relative;
         }
 
             .page-header h1 {
@@ -49,21 +58,20 @@
                 color: #fff;
             }
 
-        .grades-card {
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+        .grades-card,
+        .summary-box {
+            background: var(--card);
             border: 1px solid var(--border);
-            overflow: hidden;
+            box-shadow: var(--shadow);
         }
-
         .grades-table {
             margin: 0;
         }
 
             .grades-table thead th {
-                background: rgba(26,58,92,.05);
+                background: rgba(92,64,51,.06);
                 color: var(--navy);
+            
                 font-size: .78rem;
                 font-weight: 700;
                 letter-spacing: .06em;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PopeShenoudaSeminary.Data;
 using PopeShenoudaSeminary.Models;
@@ -25,48 +26,59 @@ namespace PopeShenoudaSeminary.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
+            model.Email = model.Email?.Trim().ToLower();
+
             var user = _context.Users
                 .Include(u => u.Role)
-                .FirstOrDefault(u => u.Email == model.Email);
+                .FirstOrDefault(u => u.Email.ToLower() == model.Email);
 
             if (user == null)
             {
-                ModelState.AddModelError("", "Email not found");
+                ModelState.AddModelError("", "Invalid email or password");
                 return View(model);
             }
 
-            var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<string>();
+            if (user.Role == null)
+            {
+                ModelState.AddModelError("", "Account configuration error");
+                return View(model);
+            }
+
+            var hasher = new PasswordHasher<string>();
 
             var result = hasher.VerifyHashedPassword(
                 null,
                 user.PasswordHash,
-                model.Password
-            );
+                model.Password);
 
-            if (result == Microsoft.AspNetCore.Identity.PasswordVerificationResult.Failed)
+            if (result == PasswordVerificationResult.Failed)
             {
-                ModelState.AddModelError("", "Password incorrect");
+                ModelState.AddModelError("", "Invalid email or password");
                 return View(model);
+            }
+
+            if (result == PasswordVerificationResult.SuccessRehashNeeded)
+            {
+                user.PasswordHash = hasher.HashPassword(null, model.Password);
+                _context.SaveChanges();
             }
 
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("Role", user.Role.Name);
 
-            if (user.Role.Name == "Admin")
-                return RedirectToAction("Dashboard", "Admin");
-
-            if (user.Role.Name == "Doctor")
-                return RedirectToAction("Dashboard", "Doctor");
-
-            if (user.Role.Name == "Student")
-                return RedirectToAction("Dashboard", "Student");
-
-            return View();
+            return user.Role.Name switch
+            {
+                "Admin" => RedirectToAction("Dashboard", "Admin"),
+                "Doctor" => RedirectToAction("Dashboard", "Doctor"),
+                "Student" => RedirectToAction("Dashboard", "Student"),
+                _ => RedirectToAction("Index", "Home")
+            };
         }
     }
 }

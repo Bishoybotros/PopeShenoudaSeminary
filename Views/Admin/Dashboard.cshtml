@@ -1,39 +1,465 @@
-﻿<ul>
+@*
+    Admin Sidebar Navigation — _AdminSidebar.cshtml (or Dashboard.cshtml partial)
+    Drop this into your admin layout as @Html.Partial("_AdminSidebar")
+*@
 
-    <li>
-        <a asp-controller="Admin" asp-action="Dashboard">
-            Dashboard
+@{
+    var current = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action  = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool Is(string ctrl, string act = null) =>
+        string.Equals(current, ctrl, StringComparison.OrdinalIgnoreCase) &&
+        (act == null || string.Equals(action, act, StringComparison.OrdinalIgnoreCase));
+}
+
+@* <style>
+/* ── SIDEBAR TOKENS ── */
+:root {
+        --adm-navy: #9b6e33;
+        --adm-navy2: #dda861;
+    --adm-gold:   #b8933a;
+    --adm-gold2:  #d4a94d;
+    --adm-text:   rgba(255,255,255,.75);
+    --adm-active: rgba(255,255,255,.08);
+    --adm-hover:  rgba(255,255,255,.05);
+    --adm-border: rgba(255,255,255,.08);
+    --sidebar-w:  240px;
+}
+
+/* ── SIDEBAR SHELL ── */
+.adm-sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--adm-navy2);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 10; right: 0;       /* RTL: right side */
+    z-index: 1040;
+    transition: transform .28s ease;
+}
+
+/* For LTR admin layouts swap to left:0 */
+body.admin-ltr .adm-sidebar { right:auto; left:0; }
+
+/* ── BRAND AREA ── */
+.adm-brand {
+    padding: 1.5rem 1.25rem 1.25rem;
+    border-bottom: 1px solid var(--adm-border);
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+.adm-brand-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--adm-gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; color: #fff; flex-shrink: 0;
+}
+.adm-brand-name {
+    font-size: .82rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+}
+.adm-brand-sub {
+    font-size: .7rem;
+    color: var(--adm-gold2);
+    margin-top: .1rem;
+}
+
+/* ── SECTION LABEL ── */
+.adm-section-lbl {
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+    padding: 1.25rem 1.25rem .4rem;
+}
+
+/* ── NAV ITEMS ── */
+.adm-nav { list-style: none; padding: 0; margin: 0; }
+
+.adm-nav-item { margin: 2px 8px; }
+
+.adm-nav-link {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .62rem .85rem;
+    border-radius: 9px;
+    color: var(--adm-text);
+    text-decoration: none;
+    font-size: .875rem;
+    font-weight: 500;
+    transition: background .15s, color .15s;
+}
+.adm-nav-link:hover {
+    background: var(--adm-hover);
+    color: #fff;
+    text-decoration: none;
+}
+.adm-nav-link.active {
+    background: var(--adm-active);
+    color: #fff;
+    font-weight: 600;
+}
+.adm-nav-link.active .nav-icon { color: var(--adm-gold2); }
+
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: rgba(255,255,255,.4);
+    flex-shrink: 0;
+    transition: color .15s;
+}
+.adm-nav-link:hover .nav-icon { color: rgba(255,255,255,.7); }
+
+/* ── BOTTOM SECTION ── */
+.adm-sidebar-footer {
+    margin-top: auto;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--adm-border);
+}
+.adm-logout {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .55rem .85rem;
+    border-radius: 9px;
+    color: rgba(255,255,255,.5);
+    text-decoration: none;
+    font-size: .83rem;
+    transition: background .15s, color .15s;
+}
+.adm-logout:hover {
+    background: rgba(220,38,38,.15);
+    color: #f87171;
+    text-decoration: none;
+}
+
+/* ── MAIN CONTENT OFFSET ── */
+.adm-main {
+    margin-right: var(--sidebar-w);   /* RTL */
+    min-height: 100vh;
+    background: #f0f2f5;
+}
+body.admin-ltr .adm-main { margin-right: 0; margin-left: var(--sidebar-w); }
+
+/* ── MOBILE TOGGLE ── */
+@@media (max-width: 991px) {
+    .adm-sidebar { transform: translateX(100%); }      /* RTL hidden off screen */
+    .adm-sidebar.open { transform: translateX(0); }
+    .adm-main { margin-right: 0; }
+    .adm-toggle {
+        display: flex !important;
+        position: fixed;
+        top: .85rem; right: .85rem;
+        z-index: 1050;
+        width: 40px; height: 40px;
+        border-radius: 9px;
+        background: var(--adm-navy2);
+        border: none;
+        align-items: center; justify-content: center;
+        color: #fff; font-size: 1.2rem;
+        cursor: pointer;
+    }
+}
+.adm-toggle { display: none; }
+</style>
+ *@
+
+<style>
+    /* ── COFFEE SIDEBAR TOKENS ── */
+    :root {
+        --adm-navy: #4B3621; /* Dark Espresso */
+        --adm-navy2: #6F4E37; /* Mocha */
+        --adm-gold: #C69C6D; /* Caramel */
+        --adm-gold2: #D7B899; /* Latte */
+        --adm-text: rgba(255,248,240,.78);
+        --adm-active: rgba(255,255,255,.10);
+        --adm-hover: rgba(255,255,255,.06);
+        --adm-border: rgba(255,255,255,.08);
+        --sidebar-w: 240px;
+    }
+
+    /* ── SIDEBAR SHELL ── */
+    .adm-sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: linear-gradient( 180deg, #4B3621 0%, #5C4033 40%, #6F4E37 100% );
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 10;
+        right: 0;
+        z-index: 1040;
+        transition: transform .28s ease;
+        box-shadow: 0 0 25px rgba(75,54,33,.18);
+    }
+
+    /* For LTR admin layouts swap to left:0 */
+    body.admin-ltr .adm-sidebar {
+        right: auto;
+        left: 0;
+    }
+
+    /* ── BRAND AREA ── */
+    .adm-brand {
+        padding: 1.5rem 1.25rem 1.25rem;
+        border-bottom: 1px solid var(--adm-border);
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .adm-brand-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient( 135deg, #C69C6D, #D7B899 );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        color: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 3px 10px rgba(198,156,109,.35);
+    }
+
+    .adm-brand-name {
+        font-size: .82rem;
+        font-weight: 700;
+        color: #FFF8F0;
+        line-height: 1.3;
+    }
+
+    .adm-brand-sub {
+        font-size: .7rem;
+        color: #D7B899;
+        margin-top: .1rem;
+    }
+
+    /* ── SECTION LABEL ── */
+    .adm-section-lbl {
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: rgba(215,184,153,.55);
+        padding: 1.25rem 1.25rem .4rem;
+    }
+
+    /* ── NAV ITEMS ── */
+    .adm-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .adm-nav-item {
+        margin: 2px 8px;
+    }
+
+    .adm-nav-link {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        padding: .62rem .85rem;
+        border-radius: 10px;
+        color: var(--adm-text);
+        text-decoration: none;
+        font-size: .875rem;
+        font-weight: 500;
+        transition: all .15s ease;
+    }
+
+        .adm-nav-link:hover {
+            background: rgba(198,156,109,.15);
+            color: #FFF8F0;
+            text-decoration: none;
+        }
+
+        .adm-nav-link.active {
+            background: rgba(198,156,109,.18);
+            color: #FFF8F0;
+            font-weight: 600;
+            border-right: 3px solid var(--adm-gold);
+        }
+
+            .adm-nav-link.active .nav-icon {
+                color: var(--adm-gold);
+            }
+
+    .nav-icon {
+        width: 20px;
+        text-align: center;
+        font-size: 1rem;
+        color: rgba(255,248,240,.45);
+        flex-shrink: 0;
+        transition: color .15s;
+    }
+
+    .adm-nav-link:hover .nav-icon {
+        color: var(--adm-gold);
+    }
+
+    /* ── BOTTOM SECTION ── */
+    .adm-sidebar-footer {
+        margin-top: auto;
+        padding: 1rem 1.25rem;
+        border-top: 1px solid var(--adm-border);
+    }
+
+    .adm-logout {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        padding: .55rem .85rem;
+        border-radius: 9px;
+        color: rgba(255,248,240,.55);
+        text-decoration: none;
+        font-size: .83rem;
+        transition: all .15s;
+    }
+
+        .adm-logout:hover {
+            background: rgba(165,42,42,.18);
+            color: #ffb4a2;
+            text-decoration: none;
+        }
+
+    /* ── MAIN CONTENT OFFSET ── */
+    .adm-main {
+        margin-right: var(--sidebar-w);
+        min-height: 100vh;
+        background: #F7F1EA;
+    }
+
+    body.admin-ltr .adm-main {
+        margin-right: 0;
+        margin-left: var(--sidebar-w);
+    }
+
+    /* ── MOBILE TOGGLE ── */
+    @@media (max-width: 991px) {
+        .adm-sidebar {
+            transform: translateX(100%);
+        }
+
+            .adm-sidebar.open {
+                transform: translateX(0);
+            }
+
+        .adm-main {
+            margin-right: 0;
+        }
+
+        .adm-toggle {
+            display: flex !important;
+            position: fixed;
+            top: .85rem;
+            right: .85rem;
+            z-index: 1050;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #6F4E37;
+            border: none;
+            align-items: center;
+            justify-content: center;
+            color: #FFF8F0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(75,54,33,.25);
+        }
+    }
+
+    .adm-toggle {
+        display: none;
+    }
+</style>
+<!-- Mobile toggle -->
+<button class="adm-toggle" onclick="document.querySelector('.adm-sidebar').classList.toggle('open')">
+    <i class="bi bi-list"></i>
+</button>
+
+<aside class="adm-sidebar">
+
+    <!-- Brand -->
+    <div class="adm-brand">
+        <div class="adm-brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <div>
+            <div class="adm-brand-name">كلية البابا شنودة</div>
+            <div class="adm-brand-sub">لوحة الإدارة</div>
+        </div>
+    </div>
+
+    <!-- Main nav -->
+    <div class="adm-section-lbl">القائمة الرئيسية</div>
+    <ul class="adm-nav">
+        <li class="adm-nav-item">
+            <a class="adm-nav-link @(Is("Admin","Dashboard") ? "active" : "")"
+               asp-controller="Admin" asp-action="Dashboard">
+                <i class="bi bi-speedometer2 nav-icon"></i>
+                لوحة التحكم
+            </a>
+        </li>
+        <li class="adm-nav-item">
+            <a class="adm-nav-link @(Is("Students") ? "active" : "")"
+               asp-controller="Students" asp-action="Index">
+                <i class="bi bi-people-fill nav-icon"></i>
+                إدارة الطلاب
+            </a>
+        </li>
+        @* in future *@
+       @*  <li class="adm-nav-item">
+            <a class="adm-nav-link @(Is("Subjects") ? "active" : "")"
+               asp-controller="Subjects" asp-action="Index">
+                <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+                إدارة المواد
+            </a>
+        </li> *@
+        <li class="adm-nav-item">
+            <a class="adm-nav-link @(Is("Grades") ? "active" : "")"
+               asp-controller="Admin" asp-action="AllStudentsGrades">
+                <i class="bi bi-bar-chart-fill nav-icon"></i>
+                إدارة الدرجات
+            </a>
+        </li>
+        <li class="adm-nav-item">
+            <a class="adm-nav-link @(Is("Books") ? "active" : "")"
+               asp-controller="Books" asp-action="Index">
+                <i class="bi bi-book-fill nav-icon"></i>
+                إدارة الكتب
+            </a>
+        </li>
+    </ul>
+
+    <div class="adm-section-lbl">أدوات</div>
+    <ul class="adm-nav">
+        <li class="adm-nav-item">
+            <a class="adm-nav-link @(Is("Import") ? "active" : "")"
+               asp-controller="Import" asp-action="Index">
+                <i class="bi bi-file-earmark-excel-fill nav-icon"></i>
+                استيراد Excel
+            </a>
+        </li>
+    </ul>
+
+    <!-- Footer / logout -->
+    <div class="adm-sidebar-footer">
+        <a asp-controller="Account" asp-action="Login" class="adm-logout">
+            <i class="bi bi-box-arrow-right"></i>
+            تسجيل الخروج
         </a>
-    </li>
+        <div class="preloader">
+            <span>LOADING</span>
+            <span class="loader"></span>
+        </div>
+    </div>
 
-    <li>
-        <a asp-controller="Students" asp-action="Index">
-            Manage Students
-        </a>
-    </li>
-
-    <li>
-        <a asp-controller="Subjects" asp-action="Index">
-            Manage Subjects
-        </a>
-    </li>
-
-    <li>
-        <a asp-controller="Grades" asp-action="Index">
-            Manage Grades
-        </a>
-    </li>
-
-    <li>
-        <a asp-controller="Books" asp-action="Index">
-            Manage Books
-        </a>
-    </li>
-
-    <li>
-        <a asp-controller="Import" asp-action="Index">
-            Import Excel
-        </a>
-    </li>
-
-</ul>
+</aside>

@@ -1,46 +1,374 @@
-﻿@model List<PopeShenoudaSeminary.Models.StudentSubjectGrade>
+@model List<PopeShenoudaSeminary.Models.StudentSubjectGrade>
+@if (TempData["AlertMessage"] != null)
+{
+    var alertType = TempData["AlertType"]?.ToString();
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="card-title">All Students Grades</h3>
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-striped table-responsive" role="table">
-                    <thead>
-                        <tr>
-                            <th style="width: 10px" scope="col">#</th>
-                            <th scope="col">Student</th>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Score Progress</th>
-                            <th style="width: 40px" scope="col">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int index = 1;
-                        }
-                        @foreach (var g in Model)
-                        {
-                            <tr class="align-middle">
-                                <td>@(index++).</td>
-                                <td>@g.Student.FullName</td>
-                                <td>@g.Subject.Name</td>
-                                <td>
-                                    <div class="progress progress-xs progress-striped active">
-                                        <div class="progress-bar text-bg-primary" style="width: @g.Score%"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge text-bg-primary">@g.Score%</span>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+    <div class="custom-alert @(alertType == "success" ? "alert-success-coffee" : "alert-error-coffee")">
+        <div class="alert-icon">
+            @if (alertType == "success")
+            {
+                <i class="bi bi-check-circle-fill"></i>
+            }
+            else
+            {
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            }
         </div>
+
+        <div class="alert-content">
+            @TempData["AlertMessage"]
+        </div>
+    </div>
+}
+@{
+    ViewData["Title"] = "درجات الطلاب";
+}
+
+@section Styles {
+<style>
+    :root {
+        --navy: #1a3a5c; --gold: #b8933a;
+        --surface: #f0f2f5; --card: #fff;
+        --border: #e4e7ec; --radius: 12px;
+        --shadow: 0 2px 12px rgba(26,58,92,.08);
+    }
+
+        .custom-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
+            animation: slideDown .3s ease;
+        }
+
+        .alert-success-coffee {
+            background: #f4ede4;
+            border-right: 5px solid #8b5e3c;
+            color: #5a3e2b;
+        }
+
+        .alert-error-coffee {
+            background: #fbeaea;
+            border-right: 5px solid #b42318;
+            color: #912018;
+        }
+
+        .alert-icon {
+            font-size: 1.4rem;
+        }
+
+        .alert-content {
+            font-weight: 600;
+        }
+
+        @@keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    .adm-page-header {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 1.25rem 1.5rem;
+        display: flex; align-items: center;
+        justify-content: space-between; gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .adm-page-title { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin: 0; }
+    .adm-page-sub   { font-size: .8rem; color: #6b7280; margin-top: .15rem; }
+
+    .btn-adm-primary {
+        display: inline-flex; align-items: center; gap: .4rem;
+        background: var(--navy); color: #fff;
+        padding: .5rem 1.1rem; border-radius: 9px;
+        font-size: .83rem; font-weight: 600;
+        text-decoration: none; border: none; cursor: pointer;
+        transition: background .2s;
+    }
+    .btn-adm-primary:hover { background: #234d7a; color: #fff; }
+
+    .adm-content { padding: 1.5rem; }
+
+    /* Filter bar */
+    .filter-bar {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: .9rem 1.25rem;
+        margin-bottom: 1.25rem;
+        display: flex; gap: .75rem; align-items: center; flex-wrap: wrap;
+    }
+    .filter-bar input, .filter-bar select {
+        border: 1px solid var(--border); border-radius: 8px;
+        padding: .45rem .85rem; font-size: .83rem;
+        color: #1e2535; background: var(--surface);
+        outline: none; transition: border .2s;
+    }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--navy); }
+    .filter-bar input { flex: 1; min-width: 180px; }
+
+        .btn-adm-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: #6b7280;
+            color: #fff;
+            padding: .5rem 1.1rem;
+            border-radius: 9px;
+            font-size: .83rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            transition: background .2s;
+        }
+
+            .btn-adm-secondary:hover {
+                background: #4b5563;
+                color: #fff;
+            }
+
+
+        .btn-adm-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: var(--navy);
+            color: #fff;
+            padding: .5rem 1.1rem;
+            border-radius: 9px;
+            font-size: .83rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .btn-adm-primary:hover {
+                background: #234d7a;
+                color: #fff;
+            }
+    /* Table card */
+    .table-card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius); box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+    .adm-table { margin: 0; }
+    .adm-table thead th {
+        background: rgba(26,58,92,.04);
+        color: var(--navy);
+        font-size: .73rem; font-weight: 700;
+        letter-spacing: .06em; text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        padding: .85rem 1.1rem; white-space: nowrap;
+    }
+    .adm-table tbody td {
+        padding: .85rem 1.1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: .875rem;
+    }
+    .adm-table tbody tr:last-child td { border-bottom: none; }
+    .adm-table tbody tr:hover { background: rgba(26,58,92,.025); }
+
+    .student-cell { display: flex; align-items: center; gap: .65rem; }
+    .stu-avatar {
+        width: 32px; height: 32px; border-radius: 50%;
+        background: rgba(26,58,92,.1); color: var(--navy);
+        display: flex; align-items: center; justify-content: center;
+        font-size: .8rem; font-weight: 700; flex-shrink: 0;
+    }
+    .stu-name { font-weight: 600; color: #1e2535; }
+
+    .prog-wrap { display: flex; align-items: center; gap: .65rem; min-width: 140px; }
+    .prog-bar-bg {
+        flex: 1; height: 6px; background: var(--border);
+        border-radius: 99px; overflow: hidden;
+    }
+    .prog-bar-fill { height: 100%; border-radius: 99px; }
+
+    .score-badge {
+        display: inline-block;
+        padding: .25rem .7rem; border-radius: 20px;
+        font-size: .78rem; font-weight: 700;
+    }
+    .sc-ex  { background:rgba(22,128,60,.12);  color:#16803c; }
+    .sc-gd  { background:rgba(37,99,235,.1);   color:#1d4ed8; }
+    .sc-av  { background:rgba(184,147,58,.15);  color:#92400e; }
+    .sc-ps  { background:rgba(124,45,18,.1);    color:#7c2d12; }
+    .sc-fl  { background:rgba(220,38,38,.1);    color:#dc2626; }
+
+    .action-btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 7px; border: none;
+        cursor: pointer; text-decoration: none; font-size: .85rem;
+        transition: background .15s;
+    }
+    .action-edit   { background:rgba(37,99,235,.1);  color:#2563eb; }
+    .action-delete { background:rgba(220,38,38,.1);  color:#dc2626; }
+    .action-edit:hover   { background:rgba(37,99,235,.2);  color:#1d4ed8; }
+    .action-delete:hover { background:rgba(220,38,38,.2);  color:#b91c1c; }
+
+    /* summary strip */
+    .summary-strip {
+        display: flex; gap: .85rem; margin-bottom: 1.25rem; flex-wrap: wrap;
+    }
+    .ss-box {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: .85rem 1.1rem;
+        flex: 1; min-width: 110px; box-shadow: var(--shadow);
+    }
+    .ss-val { font-size: 1.5rem; font-weight: 800; color: var(--navy); line-height: 1; }
+    .ss-lbl { font-size: .75rem; color: #6b7280; margin-top: .2rem; }
+
+    .empty-row td { text-align: center; padding: 3rem; color: #6b7280; }
+</style>
+}
+
+<div class="adm-page-header">
+    <div>
+        <h1 class="adm-page-title">درجات جميع الطلاب</h1>
+        <div class="adm-page-sub">@Model.Count سجل إجمالي</div>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-controller="Admin" asp-action="Dashboard" class="btn-adm-secondary">
+            <i class="bi bi-house-door-fill"></i>
+            لوحة التحكم
+        </a>
+
+        <a asp-controller="Admin" asp-action="AddStudentGrade" class="btn-adm-primary">
+            <i class="bi bi-person-plus-fill"></i> إضافة درجة
+        </a>
+    </div>
+   
+</div>
+
+<div class="adm-content">
+
+    <!-- Summary strip -->
+    <div class="summary-strip">
+        <div class="ss-box">
+            <div class="ss-val">@Model.Count</div>
+            <div class="ss-lbl">إجمالي السجلات</div>
+        </div>
+        <div class="ss-box">
+            <div class="ss-val" style="color:#16803c">@Model.Count(g => g.Score >= 50)</div>
+            <div class="ss-lbl">ناجحون</div>
+        </div>
+        <div class="ss-box">
+            <div class="ss-val" style="color:#dc2626">@Model.Count(g => g.Score < 50)</div>
+            <div class="ss-lbl">راسبون</div>
+        </div>
+        <div class="ss-box">
+            <div class="ss-val" style="color:var(--gold)">
+                @(Model.Any() ? Math.Round(Model.Average(g => (double)g.Score), 1).ToString() : "—")
+            </div>
+            <div class="ss-lbl">متوسط الدرجات</div>
+        </div>
+        <div class="ss-box">
+            <div class="ss-val" style="color:#16803c">@Model.Count(g => g.Score >= 85)</div>
+            <div class="ss-lbl">ممتازون</div>
+        </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+        <i class="bi bi-search" style="color:#6b7280"></i>
+        <input type="text" id="searchInput" placeholder="بحث باسم الطالب أو المادة...">
+        <select id="filterScore">
+            <option value="">كل الدرجات</option>
+            <option value="85">ممتاز (85+)</option>
+            <option value="75">جيد جداً (75–84)</option>
+            <option value="60">جيد (60–74)</option>
+            <option value="50">مقبول (50–59)</option>
+            <option value="0">راسب (أقل من 50)</option>
+        </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <table class="table adm-table" id="gradesTable">
+            <thead>
+                <tr>
+                    <th style="width:42px">#</th>
+                    <th>الطالب</th>
+                    <th>المادة</th>
+                    <th style="width:180px">التقدم</th>
+                    <th style="width:90px">الدرجة</th>
+                    <th style="width:80px">التقدير</th>
+                    <th style="width:80px">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int idx = 1; }
+                @foreach (var g in Model)
+                {
+                    var pct   = Math.Min((double)g.Score, 100);
+                    var bar   = g.Score >= 85 ? "#16803c"
+                              : g.Score >= 75 ? "#2563eb"
+                              : g.Score >= 60 ? "#b8933a"
+                              : g.Score >= 50 ? "#92400e"
+                              : "#dc2626";
+                    var cls   = g.Score >= 85 ? "sc-ex"
+                              : g.Score >= 75 ? "sc-gd"
+                              : g.Score >= 60 ? "sc-av"
+                              : g.Score >= 50 ? "sc-ps" : "sc-fl";
+                    var lbl   = g.Score >= 85 ? "ممتاز"
+                              : g.Score >= 75 ? "جيد جداً"
+                              : g.Score >= 60 ? "جيد"
+                              : g.Score >= 50 ? "مقبول" : "راسب";
+                    var init  = g.Student?.FullName?.Length > 0 ? g.Student.FullName[0].ToString() : "؟";
+                    <tr data-name="@g.Student?.FullName?.ToLower()" data-subject="@g.Subject?.Name?.ToLower()" data-score="@g.Score">
+                        <td style="color:#9ca3af;font-size:.8rem">@(idx++)</td>
+                        <td>
+                            <div class="student-cell">
+                                <div class="stu-avatar">@init</div>
+                                <span class="stu-name">@g.Student?.FullName</span>
+                            </div>
+                        </td>
+                        <td style="color:#4b5563">@g.Subject?.Name</td>
+                        <td>
+                            <div class="prog-wrap">
+                                <div class="prog-bar-bg">
+                                    <div class="prog-bar-fill" style="width:@(pct)%;background:@bar;"></div>
+                                </div>
+                                <span style="font-size:.75rem;color:#6b7280;min-width:28px">@g.Score</span>
+                            </div>
+                        </td>
+                        <td><strong>@g.Score</strong></td>
+                        <td><span class="score-badge @cls">@lbl</span></td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a asp-controller="Grades" asp-action="Edit" asp-route-id="@g.Id"
+                                   class="action-btn action-edit" title="تعديل">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a asp-controller="Grades" asp-action="Delete" asp-route-id="@g.Id"
+                                   class="action-btn action-delete" title="حذف"
+                                   onclick="return confirm('هل أنت متأكد من الحذف؟')">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="7" class="empty-row">
+                        <i class="bi bi-bar-chart" style="font-size:2rem;display:block;margin-bottom:.5rem;color:#d1d5db"></i>
+                        لا توجد درجات مسجّلة بعد
+                    </td></tr>
+                }
+            </tbody>
+        </table>
         <div class="preloader">
             <span>LOADING</span>
             <span class="loader"></span>
@@ -48,3 +376,48 @@
     </div>
 
 </div>
+
+@section Scripts {
+<script>
+    const searchInput  = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterScore');
+    const rows = [...document.querySelectorAll('#gradesTable tbody tr[data-name]')];
+
+    function applyFilter() {
+        const q   = searchInput.value.toLowerCase().trim();
+        const rng = filterSelect.value;
+        rows.forEach(r => {
+            const name    = r.dataset.name    || '';
+            const subject = r.dataset.subject || '';
+            const score   = parseInt(r.dataset.score) || 0;
+            const matchQ  = !q || name.includes(q) || subject.includes(q);
+            let matchRng  = true;
+            if (rng === '85')  matchRng = score >= 85;
+            else if (rng === '75') matchRng = score >= 75 && score < 85;
+            else if (rng === '60') matchRng = score >= 60 && score < 75;
+            else if (rng === '50') matchRng = score >= 50 && score < 60;
+            else if (rng === '0')  matchRng = score < 50;
+            r.style.display = (matchQ && matchRng) ? '' : 'none';
+        });
+    }
+    searchInput.addEventListener('input', applyFilter);
+    filterSelect.addEventListener('change', applyFilter);
+</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alert = document.querySelector(".custom-alert");
+
+            if (alert) {
+                setTimeout(() => {
+                    alert.style.transition = "all .4s ease";
+                    alert.style.opacity = "0";
+                    alert.style.transform = "translateY(-10px)";
+
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 400);
+                }, 5000);
+            }
+        });
+    </script>
+}

@@ -1,42 +1,225 @@
 ﻿@model PopeShenoudaSeminary.ViewModels.LoginViewModel
+
 @{
     ViewData["Title"] = "تسجيل الدخول";
 }
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
 
-            <div class="card shadow">
-<form asp-action="Login" method="post">
+<style>
+    :root {
+        --espresso: #4B3621;
+        --mocha: #6F4E37;
+        --caramel: #C69C6D;
+        --latte: #D7B899;
+        --cream: #F7F1EA;
+        --vanilla: #FFFDF9;
+        --border: #E6D8C9;
+    }
 
-                    <div class="card-header text-center fw-bold">
-    <label asp-for="Email" class="form-label"></label>
-    <input asp-for="Email" class="form-control" />
-    <span asp-validation-for="Email" class="text-danger"></span>
+   
+
+    .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 450px;
+        background: var(--vanilla);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 10px 35px rgba(75,54,33,.12);
+        overflow: hidden;
+    }
+
+    .login-header {
+        background: linear-gradient( 135deg, var(--espresso), var(--mocha) );
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+        .login-header i {
+            font-size: 3rem;
+            color: var(--caramel);
+        }
+
+    .login-title {
+        margin-top: 1rem;
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+
+    .login-subtitle {
+        opacity: .85;
+        font-size: .85rem;
+    }
+
+    .login-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--espresso);
+        margin-bottom: .4rem;
+    }
+
+    .form-control {
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 10px;
+        padding: .75rem 1rem;
+    }
+
+        .form-control:focus {
+            border-color: var(--caramel);
+            box-shadow: 0 0 0 3px rgba(198,156,109,.2);
+        }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+        .password-wrapper .form-control {
+            padding-left: 45px;
+        }
+
+    .toggle-password {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: none;
+        color: #8B7355;
+        cursor: pointer;
+    }
+
+    .btn-login {
+        background: var(--mocha);
+        border: none;
+        color: white;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: .8rem;
+        transition: .2s;
+    }
+
+        .btn-login:hover {
+            background: var(--espresso);
+            color: white;
+        }
+
+    .text-danger {
+        font-size: .8rem;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card">
+
+        <div class="login-header">
+            <i class="bi bi-mortarboard-fill"></i>
+            <div class="login-title">
+                إكليريكية البابا شنودة الثالث
+            </div>
+            <div class="login-subtitle">
+                تسجيل الدخول للنظام
+            </div>
+        </div>
+
+        <div class="login-body">
+
+            <form asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           placeholder="البريد الإلكتروني" />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Password" class="form-label"></label>
+
+                    <div class="password-wrapper">
+                        <input asp-for="Password"
+                               type="password"
+                               id="passwordInput"
+                               class="form-control"
+                               placeholder="كلمة المرور" />
+
+                        <button type="button"
+                                class="toggle-password"
+                                onclick="togglePassword()">
+                            <i class="bi bi-eye-fill"
+                               id="passwordIcon"></i>
+                        </button>
+                    </div>
+
+                    <span asp-validation-for="Password"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit"
+                            class="btn btn-login">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        دخول
+                    </button>
+                </div>
+
+            </form>
+            <div class="preloader">
+                <span>LOADING</span>
+                <span class="loader"></span>
+            </div>
+        </div>
+    </div>
 </div>
 
-                    <div class="card-header text-center fw-bold">
-    <label asp-for="Password" class="form-label"></label>
-    <input asp-for="Password" class="form-control" />
-    <span asp-validation-for="Password" class="text-danger"></span>
-</div>
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
 
-<div class="d-grid">
-    <button type="submit" class="btn btn-primary">
-        دخول
-    </button>
-                        <div class="preloader">
-                            <span>LOADING</span>
-                            <span class="loader"></span>
-                        </div>
-</div>
-                    
-</form>
- 
-</div>
-</div>
-</div>
-</div>
+    <script>
+        function togglePassword() {
+
+            const input =
+                document.getElementById('passwordInput');
+
+            const icon =
+                document.getElementById('passwordIcon');
+
+            if (input.type === 'password') {
+
+                input.type = 'text';
+
+                icon.classList.remove('bi-eye-fill');
+                icon.classList.add('bi-eye-slash-fill');
+
+            } else {
+
+                input.type = 'password';
+
+                icon.classList.remove('bi-eye-slash-fill');
+                icon.classList.add('bi-eye-fill');
+            }
+        }
+    </script>
+}
 @* <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-5">

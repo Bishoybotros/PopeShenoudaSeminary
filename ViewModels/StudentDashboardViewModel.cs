@@ -12,7 +12,7 @@ namespace PopeShenoudaSeminary.ViewModels
         public List<StudentSubjectGrade> Grades { get; set; } = new();
 
         public List<Schedule> Schedule { get; set; } = new();
-        public List<User> users { get; set; } = new();
+       // public List<User> users { get; set; } = new();
         public List<Subject> Subjects { get; set; } = new();
 
 
