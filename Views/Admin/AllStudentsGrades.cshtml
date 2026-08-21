@@ -260,11 +260,17 @@
             <div class="ss-lbl">إجمالي السجلات</div>
         </div>
         <div class="ss-box">
-            <div class="ss-val" style="color:#16803c">@Model.Count(g => g.Score >= 50)</div>
+            <div class="ss-val" style="color:#16803c">
+                @Model.Count(g =>
+                                ((double)g.Score / g.Subject.MaxScore * 100) >= 85)
+            </div>
             <div class="ss-lbl">ناجحون</div>
         </div>
         <div class="ss-box">
-            <div class="ss-val" style="color:#dc2626">@Model.Count(g => g.Score < 50)</div>
+            <div class="ss-val" style="color:#dc2626">
+                @Model.Count(g =>
+                                ((double)g.Score / g.Subject.MaxScore * 100) < 50)
+            </div>
             <div class="ss-lbl">راسبون</div>
         </div>
         <div class="ss-box">
@@ -311,22 +317,26 @@
                 @{ int idx = 1; }
                 @foreach (var g in Model)
                 {
-                    var pct   = Math.Min((double)g.Score, 100);
-                    var bar   = g.Score >= 85 ? "#16803c"
-                              : g.Score >= 75 ? "#2563eb"
-                              : g.Score >= 60 ? "#b8933a"
-                              : g.Score >= 50 ? "#92400e"
+                    var maxScore = g.Subject?.MaxScore ?? 100;
+
+                    var percentage = (double)g.Score / maxScore * 100;
+
+                    var pct = Math.Min(percentage, 100);
+                    var bar = percentage >= 85 ? "#16803c"
+                    : percentage >= 75 ? "#2563eb"
+                    : percentage >= 60 ? "#b8933a"
+                    : percentage >= 50 ? "#92400e"
                               : "#dc2626";
-                    var cls   = g.Score >= 85 ? "sc-ex"
-                              : g.Score >= 75 ? "sc-gd"
-                              : g.Score >= 60 ? "sc-av"
-                              : g.Score >= 50 ? "sc-ps" : "sc-fl";
-                    var lbl   = g.Score >= 85 ? "ممتاز"
-                              : g.Score >= 75 ? "جيد جداً"
-                              : g.Score >= 60 ? "جيد"
-                              : g.Score >= 50 ? "مقبول" : "راسب";
+                    var cls = percentage >= 85 ? "sc-ex"
+                    : percentage >= 75 ? "sc-gd"
+                    : percentage >= 60 ? "sc-av"
+                    : percentage >= 50 ? "sc-ps" : "sc-fl";
+                    var lbl = percentage >= 85 ? "ممتاز"
+                    : percentage >= 75 ? "جيد جداً"
+                    : percentage >= 60 ? "جيد"
+                    : percentage >= 50 ? "مقبول" : "راسب";
                     var init  = g.Student?.FullName?.Length > 0 ? g.Student.FullName[0].ToString() : "؟";
-                    <tr data-name="@g.Student?.FullName?.ToLower()" data-subject="@g.Subject?.Name?.ToLower()" data-score="@g.Score">
+                    <tr data-name="@g.Student?.FullName?.ToLower()" data-subject="@g.Subject?.Name?.ToLower()" data-score="@percentage">
                         <td style="color:#9ca3af;font-size:.8rem">@(idx++)</td>
                         <td>
                             <div class="student-cell">
@@ -340,24 +350,12 @@
                                 <div class="prog-bar-bg">
                                     <div class="prog-bar-fill" style="width:@(pct)%;background:@bar;"></div>
                                 </div>
-                                <span style="font-size:.75rem;color:#6b7280;min-width:28px">@g.Score</span>
+                                <span style="font-size:.75rem;color:#6b7280;min-width:28px">@g.Score </span>
                             </div>
                         </td>
-                        <td><strong>@g.Score</strong></td>
+                        <td><strong> @g.Score / @g.Subject?.MaxScore</strong></td>
                         <td><span class="score-badge @cls">@lbl</span></td>
-                        <td>
-                            <div class="d-flex gap-1">
-                                <a asp-controller="Grades" asp-action="Edit" asp-route-id="@g.Id"
-                                   class="action-btn action-edit" title="تعديل">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                                <a asp-controller="Grades" asp-action="Delete" asp-route-id="@g.Id"
-                                   class="action-btn action-delete" title="حذف"
-                                   onclick="return confirm('هل أنت متأكد من الحذف؟')">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
-                            </div>
-                        </td>
+            
                     </tr>
                 }
                 @if (!Model.Any())

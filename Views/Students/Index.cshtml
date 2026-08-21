@@ -507,10 +507,24 @@
         <input type="text" id="searchInput" placeholder="بحث بالاسم أو الكود أو البريد...">
         <select id="filterGrade">
             <option value="">كل السنوات</option>
-            @foreach (var grade in Model.Where(u => u.Grade != null).Select(u => u.Grade).DistinctBy(g => g.Id))
+            @foreach (var grade in Model.Where(u => u.Grade != null)
+                        .Select(u => u.Grade)
+                        .DistinctBy(g => g.Id)
+                        .OrderBy(g => g.Id))
             {
-                <option value="@grade.Id">@grade.Name</option>
-            }
+                <option value="@grade.Id">
+                    @(grade.Id switch
+                    {
+                        1 => "الفرقة الأولى",
+                        2 => "الفرقة الثانية",
+                        3 => "الفرقة الثالثة",
+                        4 => "الفرقة الرابعة",
+                        5 => "خريج",
+                        _ => grade.Name
+                    })
+            </option>
+                        
+                        }
         </select>
         <select id="filterRole">
             <option value="">كل الأدوار</option>
@@ -591,14 +605,14 @@
                                    class="action-btn action-edit" title="تعديل">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.Id"
+                               @*  <a asp-action="Details" asp-route-id="@item.Id"
                                    class="action-btn action-details" title="التفاصيل">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
                                 <a asp-action="Delete" asp-route-id="@item.Id"
                                    class="action-btn action-delete" title="حذف">
                                     <i class="bi bi-trash-fill"></i>
-                                </a>
+                                </a> *@
                             </div>
                         </td>
                     </tr>

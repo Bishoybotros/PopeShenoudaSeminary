@@ -1,0 +1,173 @@
+@* @model PopeShenoudaSeminary.Models.StudentSubjectGrade
+
+@{
+    ViewData["Title"] = "تعديل درجة";
+}
+
+
+<div class="adm-page-header">
+    <a asp-controller="Grades" asp-action="Index" class="back-btn">
+        <i class="bi bi-arrow-right"></i> رجوع
+    </a>
+
+    <div>
+        <h1 class="adm-page-title">تعديل درجة طالب</h1>
+        <div class="adm-page-sub">
+            تعديل درجة الطالب في المادة الدراسية
+        </div>
+    </div>
+</div>
+
+
+<div class="adm-content">
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+            <div class="form-card-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+
+            <h5>بيانات الدرجة</h5>
+        </div>
+
+
+        <form asp-action="EditStudentGrade" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+
+            <div class="form-card-body">
+
+
+                <!-- Student -->
+                <div class="form-group">
+
+                    <label class="form-label">
+                        الطالب <span>*</span>
+                    </label>
+
+
+                    <select asp-for="StudentId"
+                            class="form-control-adm"
+                            required>
+
+
+                        <option value="">
+                            — اختر الطالب —
+                        </option>
+
+
+                        @foreach (var stu in ViewBag.Students)
+                        {
+                            <option value="@stu.Id"
+                                    selected="@(stu.Id == Model.StudentId)">
+                                @stu.FullName
+                            </option>
+                        }
+
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Subject -->
+                <div class="form-group">
+
+                    <label class="form-label">
+                        المادة الدراسية <span>*</span>
+                    </label>
+
+
+                    <select asp-for="SubjectId"
+                            class="form-control-adm"
+                            required>
+
+
+                        <option value="">
+                            — اختر المادة —
+                        </option>
+
+
+                        @foreach (var sub in ViewBag.Subjects)
+                        {
+
+                            <option value="@sub.Id"
+                                    selected="@(sub.Id == Model.SubjectId)">
+                                @sub.Name
+                            </option>
+
+                        }
+
+
+                    </select>
+
+                </div>
+
+
+
+
+                <!-- Score -->
+                <div class="form-group">
+
+
+                    <label class="form-label">
+                        الدرجة
+                        <span>*</span>
+
+                        <span style="font-weight:400;color:#6b7280;font-size:.75rem">
+                            (0 - 100)
+                        </span>
+
+                    </label>
+
+
+                    <input asp-for="Score"
+                           type="number"
+                           min="0"
+                           max="100"
+                           class="form-control-adm"
+                           required />
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+            <div class="form-card-footer">
+
+
+                <button type="submit" class="btn-save">
+
+                    <i class="bi bi-floppy-fill"></i>
+                    حفظ التعديل
+
+                </button>
+
+
+
+                <a asp-action="Index"
+                   class="btn-cancel">
+
+                    إلغاء
+
+                </a>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div> *@

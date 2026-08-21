@@ -188,167 +188,199 @@
         <span class="loader"></span>
     </div>
     <!-- Summary row -->
+    <!-- Summary row -->
     <div class="row g-3 mb-4">
+
         <div class="col-6 col-md-3">
             <div class="summary-box">
                 <div class="summary-val">@Model.Count</div>
                 <div class="summary-lbl">إجمالي المواد</div>
             </div>
         </div>
+
+
         <div class="col-6 col-md-3">
             <div class="summary-box">
-                <div class="summary-val" style="color:#16803c">@Model.Count(g => g.Score >= 50)</div>
+                <div class="summary-val" style="color:#16803c">
+                    @Model.Count(g =>
+                                        ((double)g.Score / g.Subject.MaxScore * 100) >= 50)
+                </div>
                 <div class="summary-lbl">مواد ناجحة</div>
             </div>
         </div>
+
+
         <div class="col-6 col-md-3">
             <div class="summary-box">
-                <div class="summary-val" style="color:#dc2626">@Model.Count(g => g.Score < 50)</div>
+                <div class="summary-val" style="color:#dc2626">
+                    @Model.Count(g =>
+                                        ((double)g.Score / g.Subject.MaxScore * 100) < 50)
+                </div>
                 <div class="summary-lbl">مواد راسبة</div>
             </div>
         </div>
+
+
         <div class="col-6 col-md-3">
             <div class="summary-box">
+
                 <div class="summary-val" style="color:var(--gold)">
-                    @(Model.Any() ? Math.Round(Model.Average(g => (double)g.Score), 1).ToString() : "—")
+                    @(Model.Any()
+                                        ? Math.Round(
+                                        Model.Average(g =>
+                                        ((double)g.Score / g.Subject.MaxScore) * 100
+                                        ), 1) + "%"
+                                        : "—")
                 </div>
+
                 <div class="summary-lbl">المتوسط العام</div>
+
             </div>
         </div>
+
     </div>
 
+
+
     <!-- Grades table -->
+
     <div class="grades-card">
+
         <table class="table grades-table">
+
             <thead>
                 <tr>
                     <th>#</th>
                     <th>المادة</th>
-                    <th class="bar-cell d-none d-md-table-cell">التقدم</th>
+                    <th class="bar-cell d-none d-md-table-cell">
+                        التقدم
+                    </th>
                     <th>الدرجة</th>
                     <th>التقدير</th>
                 </tr>
             </thead>
+
+
             <tbody>
+
                 @{
                     int i = 1;
 
-                    var passedSubjects = Model
-                    .Where(x => x.Score >= 50)
-                    .OrderByDescending(x => x.Score);
-
-                    var failedSubjects = Model
-                    .Where(x => x.Score < 50)
-                    .OrderByDescending(x => x.Score);
+                    var orderedSubjects = Model
+                    .OrderByDescending(g =>
+                    ((double)g.Score / g.Subject.MaxScore) * 100);
                 }
 
-                @* المواد الناجحة *@
-                @foreach (var g in passedSubjects)
+
+
+                @foreach (var g in orderedSubjects)
                 {
-                    var pct = Math.Min((double)g.Score, 100);
-                    var bar = g.Score >= 85 ? "#16803c"
-                    : g.Score >= 75 ? "#2563eb"
-                    : g.Score >= 60 ? "#b8933a"
-                    : "#92400e";
 
-                    var cls = g.Score >= 85 ? "score-excellent"
-                    : g.Score >= 75 ? "score-good"
-                    : g.Score >= 60 ? "score-average"
-                    : "score-pass";
+                    var percentage =
+                    ((double)g.Score / g.Subject.MaxScore) * 100;
 
-                    var label = g.Score >= 85 ? "ممتاز"
-                    : g.Score >= 75 ? "جيد جداً"
-                    : g.Score >= 60 ? "جيد"
-                    : "مقبول";
+
+                    var pct = Math.Min(percentage, 100);
+
+
+
+                    var bar =
+                    percentage >= 85 ? "#16803c" :
+                    percentage >= 75 ? "#2563eb" :
+                    percentage >= 60 ? "#b8933a" :
+                    percentage >= 50 ? "#92400e" :
+                    "#dc2626";
+
+
+                    var cls =
+                    percentage >= 85 ? "score-excellent" :
+                    percentage >= 75 ? "score-good" :
+                    percentage >= 60 ? "score-average" :
+                    percentage >= 50 ? "score-pass" :
+                    "score-fail";
+
+
+                    var label =
+                    percentage >= 85 ? "ممتاز" :
+                    percentage >= 75 ? "جيد جداً" :
+                    percentage >= 60 ? "جيد" :
+                    percentage >= 50 ? "مقبول" :
+                    "راسب";
+
 
                     <tr>
-                        <td style="color:#6b7280;font-size:.8rem">@(i++)</td>
-                        <td><span class="subject-name">@g.Subject.Name</span></td>
-                        <td class="bar-cell d-none d-md-table-cell">
-                            <div class="mini-bar-wrap">
-                                <div class="mini-bar" style="width:@(pct)%;background:@bar;"></div>
-                            </div>
+
+                        <td style="color:#6b7280;font-size:.8rem">
+                            @(i++)
                         </td>
-                        <td><strong>@g.Score</strong></td>
-                        <td><span class="score-pill @cls">@label</span></td>
-                    </tr>
-                }
 
-                @* عنوان المواد الراسبة *@
-                @if (failedSubjects.Any())
-                {
-                    <tr class="failed-header-row">
-                        <td colspan="5">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            المواد الراسبة
-                        </td>
-                    </tr>
-                }
 
-                @* المواد الراسبة *@
-                @foreach (var g in failedSubjects)
-                {
-                    var pct = Math.Min((double)g.Score, 100);
-
-                    <tr class="failed-row">
-                        <td style="color:#dc2626;font-size:.8rem">@(i++)</td>
                         <td>
-                            <span class="subject-name text-danger fw-bold">
+                            <span class="subject-name">
                                 @g.Subject.Name
                             </span>
                         </td>
+
+
+
                         <td class="bar-cell d-none d-md-table-cell">
+
                             <div class="mini-bar-wrap">
-                                <div class="mini-bar" style="width:@(pct)%;background:#dc2626;"></div>
+
+                                <div class="mini-bar"
+                                     style="
+                         width:@pct%;
+                         background:@bar;">
+                                </div>
+
                             </div>
+
                         </td>
+
+
+
                         <td>
-                            <strong class="text-danger">@g.Score</strong>
+
+                            <strong>
+                                @g.Score / @g.Subject.MaxScore
+                            </strong>
+
+                            <small class="text-muted">
+                                (@Math.Round(percentage, 1)%)
+                            </small>
+
                         </td>
+
+
+
                         <td>
-                            <span class="score-pill score-fail">
-                                راسب
+
+                            <span class="score-pill @cls">
+                                @label
                             </span>
+
                         </td>
+
+
                     </tr>
                 }
-            </tbody>
-@*             <tbody>
-                @{
-                    int i = 1;
-                }
-                @foreach (var g in Model.OrderByDescending(x => x.Score))
+
+
+                @if (!Model.Any())
                 {
-                    var pct = Math.Min((double)g.Score, 100);
-                    var bar = g.Score >= 85 ? "#16803c"
-                    : g.Score >= 75 ? "#2563eb"
-                    : g.Score >= 60 ? "#b8933a"
-                    : g.Score >= 50 ? "#92400e"
-                    : "#dc2626";
-                    var cls = g.Score >= 85 ? "score-excellent"
-                    : g.Score >= 75 ? "score-good"
-                    : g.Score >= 60 ? "score-average"
-                    : g.Score >= 50 ? "score-pass"
-                    : "score-fail";
-                    var label = g.Score >= 85 ? "ممتاز"
-                    : g.Score >= 75 ? "جيد جداً"
-                    : g.Score >= 60 ? "جيد"
-                    : g.Score >= 50 ? "مقبول"
-                    : "راسب";
                     <tr>
-                        <td style="color:#6b7280;font-size:.8rem">@(i++)</td>
-                        <td><span class="subject-name">@g.Subject.Name</span></td>
-                        <td class="bar-cell d-none d-md-table-cell">
-                            <div class="mini-bar-wrap">
-                                <div class="mini-bar" style="width:@(pct)%;background:@bar;"></div>
-                            </div>
+                        <td colspan="5" class="text-center p-4">
+                            لا توجد درجات
                         </td>
-                        <td><strong>@g.Score</strong></td>
-                        <td><span class="score-pill @cls">@label</span></td>
                     </tr>
                 }
+
+
             </tbody>
- *@        </table>
+
+
+        </table>
+
     </div>
 </div>
 

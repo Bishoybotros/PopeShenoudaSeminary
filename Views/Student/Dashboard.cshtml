@@ -498,27 +498,44 @@
                     <div class="dash-card-body">
                         @foreach (var g in Model.Grades)
                         {
-                            var pct = Math.Min((double)g.Score, 100);
-                            var barColor = g.Score >= 85 ? "#16803c"
-                            : g.Score >= 60 ? "#b8933a"
+                            var percentage = ((double)g.Score / g.Subject.MaxScore) * 100;
+
+                            var pct = Math.Min(percentage, 100);
+
+                            var barColor = percentage >= 85 ? "#16803c"
+                            : percentage >= 60 ? "#b8933a"
                             : "#dc2626";
-                            var scoreLabel = g.Score >= 85 ? "ممتاز"
-                            : g.Score >= 75 ? "جيد جداً"
-                            : g.Score >= 60 ? "جيد"
-                            : g.Score >= 50 ? "مقبول"
+
+
+                            var scoreLabel = percentage >= 85 ? "ممتاز"
+                            : percentage >= 75 ? "جيد جداً"
+                            : percentage >= 60 ? "جيد"
+                            : percentage >= 50 ? "مقبول"
                             : "راسب";
+
+
                             <div class="grade-row">
-                                <span class="grade-subject">@g.Subject.Name</span>
-                                <div class="grade-bar-wrap">
-                                    <div class="grade-bar" style="width:@(pct)%; background:@barColor;"></div>
-                                </div>
-                                <span class="grade-score" style="color:@barColor">
-                                    @g.Score
+
+                                <span class="grade-subject">
+                                    @g.Subject.Name
                                 </span>
+
+
+                                <div class="grade-bar-wrap">
+                                    <div class="grade-bar"
+                                         style="width:@(pct)%; background:@barColor;">
+                                    </div>
+                                </div>
+
+
+                                <span class="grade-score" style="color:@barColor">
+                                    @g.Score / @g.Subject.MaxScore
+                                </span>
+
                             </div>
-                        }
-                        @if (!Model.Grades.Any())
-                        {
+                        
+
+                        
                             <p class="text-muted text-center py-3 mb-0">لا توجد درجات متاحة</p>
                         }
                     </div>

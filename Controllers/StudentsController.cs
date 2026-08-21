@@ -68,6 +68,14 @@ public class StudentsController : Controller
 
         if (!ModelState.IsValid)
         {
+            foreach (var item in ModelState)
+            {
+                foreach (var error in item.Value.Errors)
+                {
+                    Console.WriteLine($"{item.Key} : {error.ErrorMessage}");
+                }
+            }
+
             LoadDropdowns(student.RoleId, student.GradeId);
             return View(student);
         }
