@@ -202,8 +202,7 @@
         <div class="col-6 col-md-3">
             <div class="summary-box">
                 <div class="summary-val" style="color:#16803c">
-                    @Model.Count(g =>
-                                        ((double)g.Score / g.Subject.MaxScore * 100) >= 50)
+                    @Model.Count(g => g.Score >= g.Subject.MinScore)
                 </div>
                 <div class="summary-lbl">مواد ناجحة</div>
             </div>
@@ -213,8 +212,7 @@
         <div class="col-6 col-md-3">
             <div class="summary-box">
                 <div class="summary-val" style="color:#dc2626">
-                    @Model.Count(g =>
-                                        ((double)g.Score / g.Subject.MaxScore * 100) < 50)
+                    @Model.Count(g => g.Score < g.Subject.MinScore)
                 </div>
                 <div class="summary-lbl">مواد راسبة</div>
             </div>
@@ -261,7 +259,7 @@
             </thead>
 
 
-            <tbody>
+@*             <tbody>
 
                 @{
                     int i = 1;
@@ -377,7 +375,103 @@
 
 
             </tbody>
+ *@
 
+            <tbody>
+
+                @{
+                    int i = 1;
+
+                    var orderedSubjects = Model
+                    .OrderByDescending(g =>
+                    g.Subject?.MaxScore > 0
+                    ? ((double)g.Score / g.Subject.MaxScore) * 100
+                    : 0);
+                }
+
+                @foreach (var g in orderedSubjects)
+                {
+                    var maxScore = g.Subject?.MaxScore ?? 100;
+                    var minScore = g.Subject?.MinScore ?? 50;
+
+                    var percentage = maxScore > 0
+                    ? ((double)g.Score / maxScore) * 100
+                    : 0;
+
+                    var pct = Math.Min(percentage, 100);
+
+                    var isPassed = g.Score >= minScore;
+
+                    var bar =
+                    !isPassed ? "#dc2626" :
+                    percentage >= 85 ? "#16803c" :
+                    percentage >= 75 ? "#2563eb" :
+                    percentage >= 60 ? "#b8933a" :
+                    "#92400e";
+
+                    var cls =
+                    !isPassed ? "score-fail" :
+                    percentage >= 85 ? "score-excellent" :
+                    percentage >= 75 ? "score-good" :
+                    percentage >= 60 ? "score-average" :
+                    "score-pass";
+
+                    var label =
+                    !isPassed ? "راسب" :
+                    percentage >= 85 ? "ممتاز" :
+                    percentage >= 75 ? "جيد جداً" :
+                    percentage >= 60 ? "جيد" :
+                    "مقبول";
+
+                    <tr>
+
+                        <td style="color:#6b7280;font-size:.8rem">
+                            @(i++)
+                        </td>
+
+                        <td>
+                            <span class="subject-name">
+                                @g.Subject?.Name
+                            </span>
+                        </td>
+
+                        <td class="bar-cell d-none d-md-table-cell">
+                            <div class="mini-bar-wrap">
+                                <div class="mini-bar"
+                                     style="width:@pct%; background:@bar;">
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <strong>
+                                @g.Score / @maxScore
+                            </strong>
+
+                            <small class="text-muted">
+                                (@Math.Round(percentage, 1)%)
+                            </small>
+                        </td>
+
+                        <td>
+                            <span class="score-pill @cls">
+                                @label
+                            </span>
+                        </td>
+
+                    </tr>
+                }
+
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center p-4">
+                            لا توجد درجات
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
 
         </table>
 

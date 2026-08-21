@@ -468,7 +468,7 @@
                 <div class="quick-stat-card">
                     <div class="qs-icon icon-green"><i class="bi bi-patch-check-fill"></i></div>
                     <div>
-                        <div class="qs-val">@Model.Grades.Count(g => g.Score >= 50)</div>
+                        <div class="qs-val">@Model.Grades.Count(g => g.Score >= g.Subject.MinScore)</div>
                         <div class="qs-label">مواد ناجحة</div>
                     </div>
                 </div>
@@ -488,7 +488,7 @@
         <div class="row g-4">
 
             <!-- GRADES -->
-            <div class="col-lg-6">
+@*             <div class="col-lg-6">
                 <div class="dash-card">
                     <div class="dash-card-header">
                         <div class="icon icon-green"><i class="bi bi-bar-chart-fill"></i></div>
@@ -499,19 +499,21 @@
                         @foreach (var g in Model.Grades)
                         {
                             var percentage = ((double)g.Score / g.Subject.MaxScore) * 100;
-
+                            var minScore = g.Subject?.MinScore ?? 50;
                             var pct = Math.Min(percentage, 100);
-
-                            var barColor = percentage >= 85 ? "#16803c"
+                            var isPassed = g.Score >= minScore;
+                            
+                            var barColor = !isPassed ? "#dc2626"
+                            : percentage >= 85 ? "#16803c"
+                            : percentage >= 75 ? "#2563eb"
                             : percentage >= 60 ? "#b8933a"
-                            : "#dc2626";
+                            : "#92400e";
 
-
-                            var scoreLabel = percentage >= 85 ? "ممتاز"
+                            var scoreLabel = !isPassed ? "راسب"
+                            : percentage >= 85 ? "ممتاز"
                             : percentage >= 75 ? "جيد جداً"
                             : percentage >= 60 ? "جيد"
-                            : percentage >= 50 ? "مقبول"
-                            : "راسب";
+                            : "مقبول";
 
 
                             <div class="grade-row">
@@ -541,7 +543,85 @@
                     </div>
                 </div>
             </div>
+ *@
 
+
+            <!-- GRADES -->
+            <div class="col-lg-6">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="icon icon-green">
+                            <i class="bi bi-bar-chart-fill"></i>
+                        </div>
+
+                        <h5>درجاتي</h5>
+
+                        <a asp-controller="Student"
+                           asp-action="Grades"
+                           class="view-all">
+                            عرض الكل ←
+                        </a>
+                    </div>
+
+                    <div class="dash-card-body">
+
+                        @if (Model.Grades.Any())
+                        {
+                            @foreach (var g in Model.Grades)
+                            {
+                                var maxScore = g.Subject?.MaxScore ?? 100;
+                                var minScore = g.Subject?.MinScore ?? 50;
+
+                                var percentage = maxScore > 0
+                                ? (double)g.Score / maxScore * 100
+                                : 0;
+
+                                var pct = Math.Min(percentage, 100);
+
+                                var isPassed = g.Score >= minScore;
+
+                                var barColor = !isPassed ? "#dc2626"
+                                : percentage >= 85 ? "#16803c"
+                                : percentage >= 75 ? "#2563eb"
+                                : percentage >= 60 ? "#b8933a"
+                                : "#92400e";
+
+                                var scoreLabel = !isPassed ? "راسب"
+                                : percentage >= 85 ? "ممتاز"
+                                : percentage >= 75 ? "جيد جداً"
+                                : percentage >= 60 ? "جيد"
+                                : "مقبول";
+
+                                <div class="grade-row">
+
+                                    <span class="grade-subject">
+                                        @g.Subject?.Name
+                                    </span>
+
+                                    <div class="grade-bar-wrap">
+                                        <div class="grade-bar"
+                                             style="width:@(pct)%; background:@barColor;">
+                                        </div>
+                                    </div>
+
+                                    <span class="grade-score"
+                                          style="color:@barColor">
+                                        @g.Score / @maxScore
+                                    </span>
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted text-center py-3 mb-0">
+                                لا توجد درجات متاحة
+                            </p>
+                        }
+
+                    </div>
+                </div>
+            </div>
             <!-- BOOKS -->
             <div class="col-lg-6">
                 <div class="dash-card">

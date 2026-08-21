@@ -261,15 +261,13 @@
         </div>
         <div class="ss-box">
             <div class="ss-val" style="color:#16803c">
-                @Model.Count(g =>
-                                ((double)g.Score / g.Subject.MaxScore * 100) >= 85)
+                @Model.Count(g => g.Score >= g.Subject.MinScore)
             </div>
             <div class="ss-lbl">ناجحون</div>
         </div>
         <div class="ss-box">
             <div class="ss-val" style="color:#dc2626">
-                @Model.Count(g =>
-                                ((double)g.Score / g.Subject.MaxScore * 100) < 50)
+                @Model.Count(g => g.Score < g.Subject.MinScore)
             </div>
             <div class="ss-lbl">راسبون</div>
         </div>
@@ -280,13 +278,16 @@
             <div class="ss-lbl">متوسط الدرجات</div>
         </div>
         <div class="ss-box">
-            <div class="ss-val" style="color:#16803c">@Model.Count(g => g.Score >= 85)</div>
+            <div class="ss-val" style="color:#16803c">
+                @Model.Count(g =>
+                                ((double)g.Score / g.Subject.MaxScore * 100) >= 85)
+            </div>
             <div class="ss-lbl">ممتازون</div>
         </div>
     </div>
 
     <!-- Filter bar -->
-    <div class="filter-bar">
+@*     <div class="filter-bar">
         <i class="bi bi-search" style="color:#6b7280"></i>
         <input type="text" id="searchInput" placeholder="بحث باسم الطالب أو المادة...">
         <select id="filterScore">
@@ -298,7 +299,25 @@
             <option value="0">راسب (أقل من 50)</option>
         </select>
     </div>
+ *@
 
+ <!-- Filter bar -->
+<div class="filter-bar">
+    <i class="bi bi-search" style="color:#6b7280"></i>
+
+    <input type="text"
+           id="searchInput"
+           placeholder="بحث باسم الطالب أو المادة...">
+
+    <select id="filterScore">
+        <option value="">كل الدرجات</option>
+        <option value="85">ممتاز (85% فأعلى)</option>
+        <option value="75">جيد جداً (75–84%)</option>
+        <option value="60">جيد (60–74%)</option>
+        <option value="50">مقبول (ناجح وأقل من 60%)</option>
+        <option value="0">راسب (أقل من درجة النجاح)</option>
+    </select>
+</div>
     <!-- Table -->
     <div class="table-card">
         <table class="table adm-table" id="gradesTable">
@@ -318,25 +337,42 @@
                 @foreach (var g in Model)
                 {
                     var maxScore = g.Subject?.MaxScore ?? 100;
+                    var minScore = g.Subject?.MinScore ?? 50;
 
-                    var percentage = (double)g.Score / maxScore * 100;
+                    var percentage = maxScore > 0
+                    ? (double)g.Score / maxScore * 100
+                    : 0;
 
                     var pct = Math.Min(percentage, 100);
-                    var bar = percentage >= 85 ? "#16803c"
+
+                    var isPassed = g.Score >= minScore;
+
+                    var bar = !isPassed ? "#dc2626"
+                    : percentage >= 85 ? "#16803c"
                     : percentage >= 75 ? "#2563eb"
                     : percentage >= 60 ? "#b8933a"
-                    : percentage >= 50 ? "#92400e"
-                              : "#dc2626";
-                    var cls = percentage >= 85 ? "sc-ex"
+                    : "#92400e";
+
+                    var cls = !isPassed ? "sc-fl"
+                    : percentage >= 85 ? "sc-ex"
                     : percentage >= 75 ? "sc-gd"
                     : percentage >= 60 ? "sc-av"
-                    : percentage >= 50 ? "sc-ps" : "sc-fl";
-                    var lbl = percentage >= 85 ? "ممتاز"
+                    : "sc-ps";
+
+                    var lbl = !isPassed ? "راسب"
+                    : percentage >= 85 ? "ممتاز"
                     : percentage >= 75 ? "جيد جداً"
                     : percentage >= 60 ? "جيد"
-                    : percentage >= 50 ? "مقبول" : "راسب";
-                    var init  = g.Student?.FullName?.Length > 0 ? g.Student.FullName[0].ToString() : "؟";
-                    <tr data-name="@g.Student?.FullName?.ToLower()" data-subject="@g.Subject?.Name?.ToLower()" data-score="@percentage">
+                    : "مقبول";
+
+                    var init = g.Student?.FullName?.Length > 0
+                    ? g.Student.FullName[0].ToString()
+                    : "؟";
+
+                    <tr data-name="@g.Student?.FullName?.ToLower()"
+                        data-subject="@g.Subject?.Name?.ToLower()"
+                        data-score="@percentage"
+                        data-passed="@isPassed.ToString().ToLower()">
                         <td style="color:#9ca3af;font-size:.8rem">@(idx++)</td>
                         <td>
                             <div class="student-cell">
@@ -376,32 +412,106 @@
 </div>
 
 @section Scripts {
-<script>
-    const searchInput  = document.getElementById('searchInput');
-    const filterSelect = document.getElementById('filterScore');
-    const rows = [...document.querySelectorAll('#gradesTable tbody tr[data-name]')];
+@*     <script>
+        const searchInput  = document.getElementById('searchInput');
+        const filterSelect = document.getElementById('filterScore');
+        const rows = [...document.querySelectorAll('#gradesTable tbody tr[data-name]')];
 
-    function applyFilter() {
-        const q   = searchInput.value.toLowerCase().trim();
-        const rng = filterSelect.value;
-        rows.forEach(r => {
-            const name    = r.dataset.name    || '';
-            const subject = r.dataset.subject || '';
-            const score   = parseInt(r.dataset.score) || 0;
-            const matchQ  = !q || name.includes(q) || subject.includes(q);
-            let matchRng  = true;
-            if (rng === '85')  matchRng = score >= 85;
-            else if (rng === '75') matchRng = score >= 75 && score < 85;
-            else if (rng === '60') matchRng = score >= 60 && score < 75;
-            else if (rng === '50') matchRng = score >= 50 && score < 60;
-            else if (rng === '0')  matchRng = score < 50;
-            r.style.display = (matchQ && matchRng) ? '' : 'none';
-        });
-    }
-    searchInput.addEventListener('input', applyFilter);
-    filterSelect.addEventListener('change', applyFilter);
-</script>
+        function applyFilter() {
+            const q   = searchInput.value.toLowerCase().trim();
+            const rng = filterSelect.value;
+
+            rows.forEach(r => {
+                const name    = r.dataset.name || '';
+                const subject = r.dataset.subject || '';
+                const score   = parseFloat(r.dataset.score) || 0;
+                const passed  = r.dataset.passed === 'true';
+
+                const matchQ = !q || name.includes(q) || subject.includes(q);
+
+                let matchRng = true;
+
+                if (rng === '85') {
+                    matchRng = score >= 85;
+                }
+                else if (rng === '75') {
+                    matchRng = score >= 75 && score < 85;
+                }
+                else if (rng === '60') {
+                    matchRng = score >= 60 && score < 75;
+                }
+                else if (rng === '50') {
+                    // مقبول: ناجح ولكن أقل من 60%
+                    matchRng = passed && score < 60;
+                }
+                else if (rng === '0') {
+                    // راسب: الدرجة أقل من MinScore
+                    matchRng = !passed;
+                }
+
+                r.style.display = (matchQ && matchRng) ? '' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', applyFilter);
+        filterSelect.addEventListener('change', applyFilter);
+    </script>
+ *@
+
     <script>
+        const searchInput = document.getElementById('searchInput');
+        const filterSelect = document.getElementById('filterScore');
+        const rows = [...document.querySelectorAll('#gradesTable tbody tr[data-name]')];
+
+        function applyFilter() {
+            const q = searchInput.value.toLowerCase().trim();
+            const rng = filterSelect.value;
+
+            rows.forEach(r => {
+                const name = r.dataset.name || '';
+                const subject = r.dataset.subject || '';
+                const score = parseFloat(r.dataset.score) || 0;
+                const passed = r.dataset.passed === 'true';
+
+                const matchQ =
+                    !q ||
+                    name.includes(q) ||
+                    subject.includes(q);
+
+                let matchRng = true;
+
+                if (rng === '85') {
+                    // ممتاز
+                    matchRng = score >= 85;
+                }
+                else if (rng === '75') {
+                    // جيد جداً
+                    matchRng = score >= 75 && score < 85;
+                }
+                else if (rng === '60') {
+                    // جيد
+                    matchRng = score >= 60 && score < 75;
+                }
+                else if (rng === '50') {
+                    // مقبول:
+                    // الطالب ناجح حسب MinScore
+                    // ولكن نسبته أقل من 60%
+                    matchRng = passed && score < 60;
+                }
+                else if (rng === '0') {
+                    // راسب:
+                    // الدرجة أقل من MinScore
+                    matchRng = !passed;
+                }
+
+                r.style.display = (matchQ && matchRng) ? '' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', applyFilter);
+        filterSelect.addEventListener('change', applyFilter);
+    </script>
+ <script>
         document.addEventListener("DOMContentLoaded", function () {
             const alert = document.querySelector(".custom-alert");
 
