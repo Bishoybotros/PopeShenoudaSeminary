@@ -144,10 +144,37 @@
                 <hr />
 
                 <strong>تنسيق الملف المطلوب:</strong><br />
-                العمود الأول = StudentId<br />
-                العمود الثاني = SubjectId<br />
-                العمود الثالث = Score
-            </div>
+                العمود الأول = كود الطالب<br />
+                العمود الثاني = اسم المادة<br />
+                العمود الثالث = الدرجة
+
+                <hr />
+
+                <strong>مثال:</strong>
+
+                <div class="table-responsive mt-2">
+                    <table class="table table-sm table-bordered text-center mb-0">
+                        <thead>
+                            <tr>
+                                <th>كود الطالب</th>
+                                <th>اسم المادة</th>
+                                <th>الدرجة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>741</td>
+                                <td>مقدمات عهد جديد</td>
+                                <td>35</td>
+                            </tr>
+                            <tr>
+                                <td>741</td>
+                                <td>لاهوت عقيدي</td>
+                                <td>40</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
             <form asp-controller="Import"
                   asp-action="ImportGrades"

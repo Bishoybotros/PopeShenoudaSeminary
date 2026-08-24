@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+
+using Microsoft.EntityFrameworkCore;
 using PopeShenoudaSeminary.Models;
 using System.Data;
 using System.Diagnostics;
@@ -21,6 +23,37 @@ namespace PopeShenoudaSeminary.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
 
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+
+        //    modelBuilder.Entity<User>()
+        //        .HasOne(u => u.Role)
+        //        .WithMany(r => r.Users)
+        //        .HasForeignKey(u => u.RoleId);
+
+        //    modelBuilder.Entity<StudentGrade>()
+        //        .HasOne(sg => sg.Student)
+        //        .WithMany(u => u.StudentGrades)
+        //        .HasForeignKey(sg => sg.StudentId);
+
+        //    // --- Fixed: Books ---
+        //    modelBuilder.Entity<Book>()
+        //        .HasOne(b => b.Grade)
+        //        .WithMany()
+        //        .HasForeignKey(b => b.GradeId)
+        //        .OnDelete(DeleteBehavior.NoAction);
+
+        //    // --- Fixed: Schedules ---
+        //    modelBuilder.Entity<Schedule>()
+        //        .HasOne(s => s.Grade)
+        //        .WithMany()
+        //        .HasForeignKey(s => s.GradeId)
+        //        .OnDelete(DeleteBehavior.NoAction);
+
+
+        //}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -33,7 +66,8 @@ namespace PopeShenoudaSeminary.Data
             modelBuilder.Entity<StudentGrade>()
                 .HasOne(sg => sg.Student)
                 .WithMany(u => u.StudentGrades)
-                .HasForeignKey(sg => sg.StudentId);
+                .HasForeignKey(sg => sg.StudentId)
+                .OnDelete(DeleteBehavior.NoAction); // Recommended to prevent User cascade issues
 
             // --- Fixed: Books ---
             modelBuilder.Entity<Book>()
@@ -49,12 +83,27 @@ namespace PopeShenoudaSeminary.Data
                 .HasForeignKey(s => s.GradeId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // --- THE NEW FIX: StudentSubjectGrades ---
-            //modelBuilder.Entity<StudentSubjectGrade>()
-            //    .HasOne(ssg => ssg.Grade) // Assumes the navigation property is named 'Grade'
-            //    .WithMany()
-            //    .HasForeignKey(ssg => ssg.GradeId)
-            //    .OnDelete(DeleteBehavior.NoAction);
+            // --- Fixed: StudentSubjectGrades ---
+            modelBuilder.Entity<StudentSubjectGrade>()
+                .HasOne(ssg => ssg.Grade)
+                .WithMany()
+                .HasForeignKey(ssg => ssg.GradeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<StudentSubjectGrade>()
+                .HasOne(ssg => ssg.Student)
+                .WithMany()
+                .HasForeignKey(ssg => ssg.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<StudentSubjectGrade>()
+                .HasOne(ssg => ssg.Subject)
+                .WithMany()
+                .HasForeignKey(ssg => ssg.SubjectId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
+
+
+
     }
 }
