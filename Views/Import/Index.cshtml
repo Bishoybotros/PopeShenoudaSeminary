@@ -2,214 +2,733 @@
     ViewData["Title"] = "استيراد الدرجات";
 }
 
-<style>
-    :root {
-        --coffee-dark: #6F4E37;
-        --coffee: #8B6B4A;
-        --coffee-light: #B08968;
-        --cream: #F8F5F0;
-        --latte: #EFE6DD;
-        --border: #D8C3A5;
-        --text: #4B3A2F;
-        --shadow: 0 4px 14px rgba(111, 78, 55, .12);
-        --radius: 14px;
-    }
-
-    body {
-        background: var(--cream);
-    }
-
-    .import-wrapper {
-        max-width: 650px;
-        margin: 50px auto;
-    }
-
-    .import-card {
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-    }
-
-    .import-header {
-        background: linear-gradient( 135deg, var(--coffee-dark), var(--coffee) );
-        padding: 1.25rem 1.5rem;
-        color: white;
-    }
-
-        .import-header h3 {
-            margin: 0;
-            font-size: 1.15rem;
-            font-weight: 700;
+@section Styles {
+    <style>
+        :root {
+            --primary: #33210d;
+            --primary-container: #4B3621;
+            --sidebar-end: #6F4E37;
+            --secondary: #79573f;
+            --latte: #D7B899;
+            --gold: #C69C6D;
+            --surface: #FFF8F1;
+            --surface-low: #F9F3EC;
+            --surface-high: #EDE7E0;
+            --surface-card: #FFFFFF;
+            --text: #1D1B17;
+            --text-muted: #4E453D;
+            --outline: #80756C;
+            --border: #D2C4BA;
+            --success: #16803c;
+            --error: #BA1A1A;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(75,54,33,.08);
         }
 
-    .import-body {
-        padding: 1.5rem;
-    }
-
-    .import-note {
-        background: var(--latte);
-        border-right: 4px solid var(--coffee);
-        padding: 1rem;
-        border-radius: 10px;
-        color: var(--text);
-        font-size: .9rem;
-        margin-bottom: 1.25rem;
-    }
-
-        .import-note strong {
-            color: var(--coffee-dark);
+        body {
+            background: var(--surface);
+            color: var(--text);
+            font-family: 'Fira Sans', sans-serif;
         }
 
-    .form-control-coffee {
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: .75rem;
-        background: var(--cream);
-        transition: all .2s;
-    }
+        /* =========================
+                   PAGE
+                ========================= */
 
-        .form-control-coffee:focus {
-            border-color: var(--coffee);
-            box-shadow: 0 0 0 3px rgba(139,107,74,.15);
+        .import-page {
+            min-height: calc(100vh - 100px);
+            padding: 2rem 0 4rem;
+        }
+
+        .import-page-header {
+            margin-bottom: 2rem;
+        }
+
+            .import-page-header h1 {
+                color: var(--primary);
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: .5rem;
+            }
+
+            .import-page-header p {
+                color: var(--text-muted);
+                font-size: .9rem;
+                margin: 0;
+            }
+
+        /* =========================
+                   MAIN GRID
+                ========================= */
+
+        .import-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* =========================
+                   CARDS
+                ========================= */
+
+        .import-card {
+            background: var(--surface-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .import-card-header {
+            padding: 1rem 1.25rem;
+            background: var(--surface-high);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: .65rem;
+        }
+
+            .import-card-header .icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 9px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(198,156,109,.18);
+                color: var(--secondary);
+                font-size: 1.1rem;
+            }
+
+            .import-card-header h3 {
+                margin: 0;
+                color: var(--primary);
+                font-size: 1rem;
+                font-weight: 600;
+            }
+
+        .import-card-body {
+            padding: 1.5rem;
+        }
+
+        /* =========================
+                   UPLOAD ZONE
+                ========================= */
+
+        .upload-zone {
+            border: 2px dashed var(--outline);
+            border-radius: 12px;
+            min-height: 300px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--surface-card);
+            cursor: pointer;
+            transition: all .3s ease;
+        }
+
+            .upload-zone:hover {
+                border-color: var(--gold);
+                background: rgba(198,156,109,.04);
+            }
+
+            .upload-zone.dragover {
+                border-color: var(--gold);
+                background: rgba(198,156,109,.10);
+            }
+
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-high);
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-title {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: .4rem;
+        }
+
+        .upload-description {
+            color: var(--text-muted);
+            font-size: .85rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* =========================
+                   FILE INPUT
+                ========================= */
+
+        .file-input-wrapper {
+            width: 100%;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: .75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-low);
+            color: var(--text);
+            transition: all .2s;
+        }
+
+            .file-input:hover {
+                border-color: var(--gold);
+            }
+
+            .file-input:focus {
+                outline: none;
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(198,156,109,.15);
+                background: white;
+            }
+
+        /* =========================
+                   NOTE / FORMAT
+                ========================= */
+
+        .format-note {
+            background: var(--surface-low);
+            border: 1px solid rgba(215,184,153,.45);
+            border-radius: 10px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: .85rem;
+            line-height: 1.8;
+        }
+
+            .format-note strong {
+                color: var(--primary);
+            }
+
+            .format-note hr {
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: .9rem 0;
+            }
+
+        /* =========================
+                   EXCEL TABLE
+                ========================= */
+
+        .example-table {
             background: white;
+            border-color: var(--border);
+            margin-top: .5rem;
         }
 
-    .btn-coffee {
-        background: var(--coffee-dark);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: .7rem 1.3rem;
-        font-weight: 600;
-        transition: .2s;
-    }
+            .example-table th {
+                background: var(--surface-high);
+                color: var(--primary);
+                font-size: .8rem;
+                font-weight: 600;
+                border-color: var(--border);
+            }
 
-        .btn-coffee:hover {
-            background: var(--coffee);
+            .example-table td {
+                font-size: .8rem;
+                color: var(--text-muted);
+                border-color: var(--border);
+            }
+
+        /* =========================
+                   BUTTONS
+                ========================= */
+
+        .import-actions {
+            display: flex;
+            gap: .75rem;
+            margin-top: 1.25rem;
+        }
+
+        .btn-import {
+            background: var(--primary-container);
             color: white;
+            border: none;
+            border-radius: 8px;
+            padding: .7rem 1.4rem;
+            font-size: .9rem;
+            font-weight: 600;
+            transition: all .2s;
+            cursor: pointer;
         }
 
-    .btn-back {
-        background: var(--latte);
-        color: var(--coffee-dark);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: .7rem 1.3rem;
-        text-decoration: none;
-        font-weight: 600;
-        transition: .2s;
-    }
+            .btn-import:hover {
+                background: var(--sidebar-end);
+                color: white;
+            }
 
-        .btn-back:hover {
-            background: #e7dbcf;
-            color: var(--coffee-dark);
+        .btn-back {
+            background: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .7rem 1.4rem;
+            font-size: .9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all .2s;
         }
 
-    .btn-group-custom {
-        display: flex;
-        gap: .75rem;
-        margin-top: 1.25rem;
-    }
+            .btn-back:hover {
+                background: var(--surface-high);
+                color: var(--primary);
+            }
 
-    .excel-icon {
-        font-size: 3rem;
-        color: #217346;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-</style>
+        /* =========================
+                   SIDE INFO
+                ========================= */
 
-<div class="import-wrapper">
+        .info-card {
+            background: var(--surface-low);
+            border: 1px solid rgba(215,184,153,.45);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
 
-    <div class="import-card">
+        .info-title {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
 
-        <div class="import-header">
-            <h3>
-                <i class="bi bi-file-earmark-excel-fill"></i>
-                استيراد الدرجات من Excel
-            </h3>
+            .info-title i {
+                color: var(--gold);
+            }
+
+        .info-list {
+            padding-right: 1.1rem;
+            margin: 0;
+            color: var(--text-muted);
+            font-size: .82rem;
+            line-height: 1.9;
+        }
+
+            .info-list li {
+                margin-bottom: .4rem;
+            }
+
+        .excel-info {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+            .excel-info i {
+                color: #217346;
+                font-size: 2.5rem;
+            }
+
+            .excel-info strong {
+                display: block;
+                margin-top: .5rem;
+                color: var(--primary);
+                font-size: .9rem;
+            }
+
+            .excel-info span {
+                display: block;
+                color: var(--text-muted);
+                font-size: .75rem;
+                margin-top: .2rem;
+            }
+
+        /* =========================
+                   RESPONSIVE
+                ========================= */
+
+        @@media (max-width: 991px) {
+            .import-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @@media (max-width: 576px) {
+
+            .import-page {
+                padding: 1.25rem 0 3rem;
+            }
+
+            .import-page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .import-card-body {
+                padding: 1rem;
+            }
+
+            .upload-zone {
+                min-height: 250px;
+                padding: 1.25rem;
+            }
+
+            .import-actions {
+                flex-direction: column;
+            }
+
+            .btn-import,
+            .btn-back {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+}
+
+<div class="import-page">
+
+    <div class="container">
+
+        <!-- PAGE HEADER -->
+        <div class="import-page-header">
+            <h1>
+                استيراد بيانات Excel
+            </h1>
+
+            <p>
+                قم برفع ملف Excel لإضافة درجات الطلاب إلى قاعدة بيانات الكلية.
+            </p>
         </div>
 
-        <div class="import-body">
 
-            <div class="excel-icon">
-                <i class="bi bi-file-earmark-excel-fill"></i>
-            </div>
+        <!-- MAIN GRID -->
+        <div class="import-grid">
 
-            <div class="import-note">
-                يرجى رفع ملف Excel بصيغة <strong>.xlsx</strong>
+            <!-- =========================
+                 LEFT / UPLOAD
+            ========================== -->
 
-                <hr />
+            <div class="import-card">
 
-                <strong>تنسيق الملف المطلوب:</strong><br />
-                العمود الأول = كود الطالب<br />
-                العمود الثاني = اسم المادة<br />
-                العمود الثالث = الدرجة
+                <div class="import-card-header">
 
-                <hr />
-
-                <strong>مثال:</strong>
-
-                <div class="table-responsive mt-2">
-                    <table class="table table-sm table-bordered text-center mb-0">
-                        <thead>
-                            <tr>
-                                <th>كود الطالب</th>
-                                <th>اسم المادة</th>
-                                <th>الدرجة</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>741</td>
-                                <td>مقدمات عهد جديد</td>
-                                <td>35</td>
-                            </tr>
-                            <tr>
-                                <td>741</td>
-                                <td>لاهوت عقيدي</td>
-                                <td>40</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            <form asp-controller="Import"
-                  asp-action="ImportGrades"
-                  method="post"
-                  enctype="multipart/form-data">
-
-                @Html.AntiForgeryToken()
-
-                <input type="file"
-                       name="file"
-                       class="form-control form-control-coffee"
-                       accept=".xlsx"
-                       required />
-
-                <div class="btn-group-custom">
-                    <button type="submit" class="btn btn-coffee">
+                    <div class="icon">
                         <i class="bi bi-upload"></i>
-                        رفع الملف
-                    </button>
+                    </div>
 
-                    <a asp-controller="Admin"
-                       asp-action="Dashboard"
-                       class="btn-back">
-                        <i class="bi bi-arrow-right"></i>
-                        العودة للوحة التحكم
-                    </a>
+                    <h3>
+                        استيراد الدرجات
+                    </h3>
+
                 </div>
 
-            </form>
-            <div class="preloader">
-                <span>LOADING</span>
-                <span class="loader"></span>
+
+                <div class="import-card-body">
+
+                    <!-- FORMAT INFORMATION -->
+
+                    <div class="format-note">
+
+                        يرجى رفع ملف Excel بصيغة
+                        <strong>.xlsx</strong>
+
+                        <hr />
+
+                        <strong>
+                            تنسيق الملف المطلوب:
+                        </strong>
+
+                        <br />
+
+                        العمود الأول = كود الطالب
+                        <br />
+
+                        العمود الثاني = اسم المادة
+                        <br />
+
+                        العمود الثالث = الدرجة
+
+                        <hr />
+
+                        <strong>
+                            مثال:
+                        </strong>
+
+                        <div class="table-responsive mt-2">
+
+                            <table class="table table-sm table-bordered text-center mb-0 example-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>كود الطالب</th>
+                                        <th>اسم المادة</th>
+                                        <th>الدرجة</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td>741</td>
+                                        <td>مقدمات عهد جديد</td>
+                                        <td>35</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>741</td>
+                                        <td>لاهوت عقيدي</td>
+                                        <td>40</td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- UPLOAD FORM -->
+
+                    <form asp-controller="Import"
+                          asp-action="ImportGrades"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        @Html.AntiForgeryToken()
+
+
+                        <!-- UPLOAD ZONE -->
+
+                        <div class="upload-zone"
+                             id="dropzone">
+
+                            <div class="upload-icon">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                            </div>
+
+                            <div class="upload-title">
+                                اسحب وأفلت ملف Excel هنا
+                            </div>
+
+                            <div class="upload-description">
+                                أو اختر الملف من جهازك
+                                <br />
+                                <small>
+                                    الصيغة المدعومة: .xlsx
+                                </small>
+                            </div>
+
+
+                            <div class="file-input-wrapper">
+
+                                <input type="file"
+                                       name="file"
+                                       id="fileInput"
+                                       class="file-input"
+                                       accept=".xlsx"
+                                       required />
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="import-actions">
+
+                            <button type="submit"
+                                    class="btn-import">
+
+                                <i class="bi bi-upload"></i>
+
+                                رفع الملف
+
+                            </button>
+
+
+                            <a asp-controller="Admin"
+                               asp-action="Dashboard"
+                               class="btn-back">
+
+                                <i class="bi bi-arrow-right"></i>
+
+                                العودة للوحة التحكم
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+
+                    <!-- PRELOADER -->
+
+                    <div class="preloader">
+
+                        <span>LOADING</span>
+
+                        <span class="loader"></span>
+
+                    </div>
+
+                </div>
+
             </div>
+
+
+            <!-- =========================
+                 RIGHT / INFORMATION
+            ========================== -->
+
+            <div>
+
+                <div class="info-card">
+
+                    <div class="info-title">
+
+                        <i class="bi bi-info-circle-fill"></i>
+
+                        تعليمات هامة
+
+                    </div>
+
+
+                    <ul class="info-list">
+
+                        <li>
+                            يجب أن يحتوي الملف على بيانات الطلاب والدرجات.
+                        </li>
+
+                        <li>
+                            العمود الأول يجب أن يكون كود الطالب.
+                        </li>
+
+                        <li>
+                            العمود الثاني يجب أن يكون اسم المادة.
+                        </li>
+
+                        <li>
+                            العمود الثالث يجب أن يكون الدرجة.
+                        </li>
+
+                        <li>
+                            تأكد من أن أسماء المواد مطابقة للأسماء الموجودة في النظام.
+                        </li>
+
+                        <li>
+                            يجب أن تكون الدرجة رقمًا صحيحًا أو عشريًا.
+                        </li>
+
+                        <li>
+                            الملف المقبول هو بصيغة <strong>.xlsx</strong>.
+                        </li>
+
+                    </ul>
+
+
+                    <div class="excel-info">
+
+                        <i class="bi bi-file-earmark-excel-fill"></i>
+
+                        <strong>
+                            ملف Excel
+                        </strong>
+
+                        <span>
+                            XLSX فقط
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>
 
 </div>
+
+
+<script>
+
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+
+    if (dropzone && fileInput) {
+
+        dropzone.addEventListener("dragover", function (e) {
+
+            e.preventDefault();
+
+            dropzone.classList.add("dragover");
+
+        });
+
+
+        dropzone.addEventListener("dragleave", function () {
+
+            dropzone.classList.remove("dragover");
+
+        });
+
+
+        dropzone.addEventListener("drop", function (e) {
+
+            e.preventDefault();
+
+            dropzone.classList.remove("dragover");
+
+            if (e.dataTransfer.files.length > 0) {
+
+                const file = e.dataTransfer.files[0];
+
+                /*
+                 * Keep the original validation:
+                 * Only .xlsx files are accepted.
+                 */
+
+                if (!file.name.toLowerCase().endsWith(".xlsx")) {
+
+                    alert("يرجى اختيار ملف Excel بصيغة .xlsx");
+
+                    return;
+                }
+
+                fileInput.files = e.dataTransfer.files;
+            }
+
+        });
+
+
+        dropzone.addEventListener("click", function (e) {
+
+            /*
+             * Don't trigger file picker when
+             * clicking directly on the input.
+             */
+
+            if (e.target !== fileInput) {
+
+                fileInput.click();
+
+            }
+
+        });
+
+    }
+
+</script>

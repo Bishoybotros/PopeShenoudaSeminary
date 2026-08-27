@@ -196,13 +196,12 @@ namespace PopeShenoudaSeminary.Controllers
                         // Validate Score
                         // ==========================================
 
-                        if (score < subject.MinScore ||
-                            score > subject.MaxScore)
+                        if (score > subject.MaxScore)
                         {
                             errors.Add(
                                 $"الصف {row}: درجة مادة ({subject.Name}) " +
-                                $"يجب أن تكون بين {subject.MinScore} " +
-                                $"و {subject.MaxScore}.");
+                                $"يجب أن تكون اقل من او تساوى  " +
+                                $"{subject.MaxScore}.");
 
                             continue;
                         }

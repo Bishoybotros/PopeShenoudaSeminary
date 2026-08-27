@@ -1,5 +1,5 @@
 ﻿@model PopeShenoudaSeminary.ViewModels.StudentDashboardViewModel
-
+@using System.Linq
 
 @{
     ViewData["Title"] = "لوحة الطالب";
@@ -567,7 +567,7 @@
 
                         @if (Model.Grades.Any())
                         {
-                            @foreach (var g in Model.Grades)
+                            @foreach (var g in Model.Grades.Take(10))
                             {
                                 var maxScore = g.Subject?.MaxScore ?? 100;
                                 var minScore = g.Subject?.MinScore ?? 50;
